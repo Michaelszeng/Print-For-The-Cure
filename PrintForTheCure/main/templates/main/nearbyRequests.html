@@ -196,12 +196,18 @@
       a {
         font-size: 120%;
       }
+      br {
+        line-height: 10%;
+      }
       .bg {
         background: rgba(20, 20, 20, 0.12) /* Green background with 30% opacity */
       }
       .center {
         margin: auto;
         width: 50%;
+      }
+      .divStopOverflow {
+        word-wrap: break-word;
       }
     </style>
   </head>
@@ -265,19 +271,21 @@
             <p><span class="color-dark">Requester's Name: </span>{{ requestObj.fName }} {{ requestObj.lName }}</p>
             <p><span class="color-dark">Requester's Email: </span>{{ requestObj }}</p>
             <p><span class="color-dark">Requester's Organization: </span>{{ requestObj.organization }}</p>
-          </div>
-          <div class="col-md-6">
             <p><span class="color-dark">Request Details: </span>{{ requestObj.numPPE }}x <span id="type2{{ requestObj.id }}"></span></p>
+          </div>
+          <div class="col-md-6 divStopOverflow">
             <p><span class="color-dark">Request Posted On: </span>{{ requestObj.orderDate }}</p>
             <p><span class="color-dark">PPE Ideal "Deliver By" Date:</span> {{ requestObj.delivDate }}</p>
             <p><span class="color-dark">Approximate Delivery Location: </span>{{ requestObj.city }}, {{ requestObj.state }}, {{ requestObj.zipCode }}, {{ requestObj.country }}</p>
-            <p style="font-size:80%;">Exact location will be released to claimant</p>
+            <p style="margin-top:-2%; font-size:80%;">Exact location will be released to claimant</p>
+            <p><span class="color-dark">Other Notes For The Donor: </span>{{ requestObj.notes }}</p>
+            <br />
           </div>
 
           <form action"confirmation" style="padding-bottom:1em;" method="POST">
             {% csrf_token %}
             <input type="hidden" name="requestObjId" value="{{ requestObj.id }}"></input>
-            <button style="margin-top:12px;" type="submit" class="btn-xs btn-default  btn-flat-solid">Claim AND/OR More Details</button>
+            <button style="margin-top:-20px; padding-top:-20px;" type="submit" class="btn-xs btn-default  btn-flat-solid">Claim AND/OR More Details</button>
           </form>
 
 
