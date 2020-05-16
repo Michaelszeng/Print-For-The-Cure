@@ -29,6 +29,9 @@ import numpy as geek
 
 # Create your views here.
 def home(request):
+    if request.user.is_authenticated:
+        donor = Donor.objects.get(user = request.user)
+        print(donor.address)
     claimRate = getClaimRate(request)
 
     claimedPPE = 0
@@ -133,7 +136,7 @@ def donorRegistration(request):
                 newUser = User(username=request.POST['username'], password=request.POST['password'], email=request.POST['email'], first_name=request.POST['fName'], last_name=request.POST['lName'])
                 newUser.set_password(request.POST['password'])
                 newUser.save()
-                newDonor = Donor(user=newUser, address="", city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], zipCode=request.POST['zipCode'], registrationDate=timezone.now())
+                newDonor = Donor(user=newUser, address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], zipCode=request.POST['zipCode'], registrationDate=timezone.now())
                 newDonor.save()
 
                 user = authenticate(username=request.POST['username'], password=request.POST['password'])
