@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from urllib.parse import urlencode
 from django.template import loader
+from django.http import FileResponse, Http404
 # Custom imports added
 # Need timezone for date/time published
 from django.utils import timezone
@@ -63,6 +64,8 @@ def home(request):
             return HttpResponseRedirect("/catalogue-dooropener/")
         elif 'handle' in request.POST.keys():
             return HttpResponseRedirect("/catalogue-handle/")
+        elif 'guide' in request.POST.keys():
+            return HttpResponseRedirect("/donorGuide/")
 
     template = loader.get_template('main/home.html')
     context = {     #all inputs for the html go in these brackets
@@ -107,6 +110,17 @@ def catalogueHandle(request):
     template = loader.get_template('main/handle.html')
     context = {}
     return HttpResponse(template.render(context, request))
+
+def donorGuidePDF(request):
+    try:
+        return FileResponse(open('C:\\Users\\Michael Zeng\\Documents\\Programming\\Project Face Shield mk2\\PrintForTheCure\\main\\donorGuide.pdf', 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        raise Http404()
+    # with open('C:\\Users\\Michael Zeng\\Documents\\Programming\\Project Face Shield mk2\\PrintForTheCure\\main\\donorGuide.pdf', 'r') as pdf:
+    #     response = HttpResponse(pdf.read(), contenttype='application/pdf')
+    #     response['Content-Disposition'] = 'inline;filename=donorGuide.pdf'
+    #     return response
+    # pdf.closed
 
 def donorRegistration(request):
     failMessage = ""

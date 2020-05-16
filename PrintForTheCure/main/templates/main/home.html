@@ -226,6 +226,7 @@
                     <li ><a href="#about" class="link-inpage">The Movement</a></li>
                     <li ><a href="#catalog" class="link-inpage">Catalog</a></li>
                     <li ><a href="#request" class="link-inpage">Request PPE</a></li>
+                    <li ><a href="#guide" class="link-inpage">Donor Guide</a></li>
                     <li ><a href="#map" class="link-inpage">Requests Map</a></li>
                     <li ><a href="/nearbyRequests/" class="link-inpage">Nearest Requests</a></li>
                   </ul>
@@ -327,7 +328,7 @@
             </div>
 
             <div class="col-md-6">
-              <h1 style="margin:5%; font-size:825%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ claimedPPE }}+</h1>
+              <h1 style="margin:5%; margin-bottom:-3.5%; font-size:825%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ claimedPPE }}+</h1>
 
               <!-- <p style="font-size:200%; margin-top:-6%; margin-bottom:-4%;"class="text-uppercase color-dark text-bold no-margin">prob</p> -->
               <div>
@@ -339,12 +340,33 @@
       </section>
 
 
-
-      <section id="map" class="block-section">
+      <section id="guide" class="block-section">
         <div class=" shape-bottom">
           <div class="bg-secondary block-title">
             <div class="container">
-              <h2 class="text-uppercase color-dark text-bold no-margin">See a Map of Global PPE Requests</h2>
+              <h2 class="text-uppercase color-dark text-bold no-margin">How Can I 3D Print and Donate PPE?</h2>
+              <div class="title-icon"> <i class="fa fa-location-arrow"></i> </div>
+              <div class="text-center" style="padding-top: 20px;">
+                <form style="padding-bottom:1em;" method="POST">
+                  <!-- Every <form> element needs a csrf_token as a security precaution. -->
+                  {% csrf_token %}
+                  <!-- I use the hidden input element to send along the information that
+                    we are logging out. -->
+                  <input type="hidden" name="guide"></input>
+                  <button class="btn btn-default btn-flat-solid btn-pill">User Guide For Donors</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="map" class="block-section">
+        <div class=" shape-bottom">
+          <div class="bg-secondary bg-dark block-title">
+            <div class="container">
+              <h2 class=" color-light text-uppercase color-dark text-bold no-margin">See a Map of PPE Requests Around the Nation</h2>
               <div class="title-icon"> <i class="fa fa-location-arrow"></i> </div>
               <div class="text-center" style="padding-top: 20px;">
                 <form style="padding-bottom:1em;" method="POST">
@@ -353,7 +375,7 @@
                   <!-- I use the hidden input element to send along the information that
                     we are logging out. -->
                   <input type="hidden" name="mapView"></input>
-                  <button class="btn btn-default btn-flat-solid btn-pill">Redirect To PPE Requests Map</button>
+                  <button style="background-color: rgb(0, 201, 219);" class="btn btn-default btn-flat-solid btn-pill">Redirect To PPE Requests Map</button>
                 </form>
               </div>
             </div>
@@ -516,6 +538,35 @@
           </div>
         </div>
       </section>
+
+      <!-- <section id="partnersSponsors" class="block-section"> -->
+        <!--PARTNERS AND SPONSORS TITLE-->
+        <!-- <div class=" shape-bottom">
+          <div class="bg-secondary block-title">
+            <div class="container">
+              <div class="col-md-6">
+                <h2 class="text-uppercase color-dark text-bold no-margin">Partners</h2>
+                <div class="title-icon"> <i class="fa fa-envelope-o"></i> </div>
+              </div>
+              <div class="col-md-6">
+                <h2 class="text-uppercase color-dark text-bold no-margin">Sponsors</h2>
+                <div class="title-icon"> <i class="fa fa-envelope-o"></i> </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark clearfix">
+          <div class="row">
+            <div class="col-md-5" style="margin: auto;" align="center">
+
+            </div>
+            <div class="col-md-5" style="margin: auto;" align="center">
+
+            </div>
+          </div>
+        </div> -->
+        <!--END PARTNERSHIPS AND SPONSORS TITLE-->
+      <!-- </section> -->
 
       <!--CONTACT-->
       <section id="contact" class="block-section">

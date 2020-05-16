@@ -11,6 +11,7 @@ urlpatterns = [
     path('catalogue-handle/', views.catalogueHandle, name='catalogue item door handle'),
     path('catalogue-dooropener/', views.catalogueDoorOpener, name='catalogue item door opener'),
 
+    path('donorGuide/', views.donorGuidePDF, name='donor guide'),
     path('register/', views.donorRegistration, name='donor registration'),
     path('registrationSuccessful/', views.registrationSuccessful, name='registration sucessful'),
     path('login/', views.donorLogin, name='login'),
@@ -27,7 +28,7 @@ urlpatterns = [
     path('requestPPE/terms', views.terms, name='terms page'),
 
     path('requestDetails/', views.requestDetails, name='details page for request from nearbyRequests.html'),
-    path('statusCheck/', views.status, name='status check'), 
+    path('statusCheck/', views.status, name='status check'),
 
     #url(r'^django_popup_view_field/', include('django_popup_view_field.urls', namespace="django_popup_view_field")),
 
