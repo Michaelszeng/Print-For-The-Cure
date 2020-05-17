@@ -238,7 +238,7 @@ def doctorRequest(request):
         if (len(request.POST['fName']) < 1) or (len(request.POST['lName']) < 1) or (len(request.POST['email']) < 1):
             validated = False
             validationStatus += "Please ensure all fields are filled out. "
-        if timezone.now().date() > datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])):
+        if timezone.now().date() + datetime.timedelta(days=4) > datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])):
             validated = False
             validationStatus += "Please set the delivery date later. "
         if request.POST['confirmEmail'] != request.POST['email']:
