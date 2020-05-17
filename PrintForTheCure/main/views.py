@@ -241,6 +241,9 @@ def doctorRequest(request):
         if timezone.now().date() > datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])):
             validated = False
             validationStatus += "Please set the delivery date later. "
+        if request.POST['confirmEmail'] != request.POST['email']:
+            validated = False
+            validationStatus += "Please ensure both email boxes contain the same, valid email address."
         if validated:
             print("Address Validation Succeeded")
 
