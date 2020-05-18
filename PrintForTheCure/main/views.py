@@ -501,10 +501,6 @@ def confirmClaim(request):
 
     if request.method == 'POST':
         if 'yes' in request.POST.keys():
-
-            requestObj.status = 2
-            requestObj.save()
-
             service = getService()
             #Donor Email
             subject = "Claimed Request For PPE"
@@ -532,6 +528,9 @@ def confirmClaim(request):
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
             return HttpResponseRedirect(url)  # 4
+
+            requestObj.status = 2
+            requestObj.save()
         elif 'no' in request.POST.keys():
             return HttpResponseRedirect("/nearbyRequests/")
     template = loader.get_template('main/confirmClaim.html')
@@ -548,9 +547,6 @@ def confirmClaim1(request):
     if request.method == 'POST':
         if 'yes' in request.POST.keys():
 
-            requestObj.status = 2
-            requestObj.save()
-
             service = getService()
             #Donor Email
             subject = "Claimed Request For PPE"
@@ -578,6 +574,9 @@ def confirmClaim1(request):
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
             return HttpResponseRedirect(url)  # 4
+            
+            requestObj.status = 2
+            requestObj.save()
         elif 'no' in request.POST.keys():
             return HttpResponseRedirect("/nearbyRequests/")
     template = loader.get_template('main/confirmClaim.html')
