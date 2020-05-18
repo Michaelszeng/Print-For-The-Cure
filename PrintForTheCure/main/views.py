@@ -352,20 +352,20 @@ def nearbyRequests(request):
             requestModel.status = 1
             requestModel.save()
 
-            service = getService()
-            subject = "Request For PPE Expired"
-            ppeType = ""
-            if "shield" in requestModel.typePPE:
-                ppeType = "3D Printed Face Shields"
-            elif "strap" in requestModel.typePPE:
-                ppeType = "Face Mask Comfort Strap"
-            elif "handle" in requestModel.typePPE:
-                ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestModel.typeHandle
-            elif "opener" in requestModel.typePPE:
-                ppeType = "Personal Touchless Door Opener"
-            message_text = "We are sorry to notify you that your request for PPE has expired without being claimed. Your request Details:\n\n\nRequester's Name: %s %s\nRequester's Email: %s\nPPE Delivery Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nAs the website is just launching, we are gathering more donors to help ensure our essential workers can get the PPE they need. Please request again on https://printforthecure.com and we will do our best to help you next time. Thank you for your understading.\n\nPlease contact us at printforthecure@gmail.com with any questions." % (requestModel.fName, requestModel.lName, requestModel.email, requestModel.address, requestModel.city, requestModel.state, requestModel.zipCode, requestModel.country, ppeType, requestModel.numPPE, requestModel.delivDate, requestModel.notes)
-            message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
-            sendMessage(service, 'me', message)
+            # service = getService()
+            # subject = "Request For PPE Expired"
+            # ppeType = ""
+            # if "shield" in requestModel.typePPE:
+            #     ppeType = "3D Printed Face Shields"
+            # elif "strap" in requestModel.typePPE:
+            #     ppeType = "Face Mask Comfort Strap"
+            # elif "handle" in requestModel.typePPE:
+            #     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestModel.typeHandle
+            # elif "opener" in requestModel.typePPE:
+            #     ppeType = "Personal Touchless Door Opener"
+            # message_text = "We are sorry to notify you that your request for PPE has expired without being claimed. Your request Details:\n\n\nRequester's Name: %s %s\nRequester's Email: %s\nPPE Delivery Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nAs the website is just launching, we are gathering more donors to help ensure our essential workers can get the PPE they need. Please request again on https://printforthecure.com and we will do our best to help you next time. Thank you for your understading.\n\nPlease contact us at printforthecure@gmail.com with any questions." % (requestModel.fName, requestModel.lName, requestModel.email, requestModel.address, requestModel.city, requestModel.state, requestModel.zipCode, requestModel.country, ppeType, requestModel.numPPE, requestModel.delivDate, requestModel.notes)
+            # message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
+            # sendMessage(service, 'me', message)
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect("/notLoggedIn/")
@@ -410,7 +410,7 @@ def nearbyRequests(request):
     numApiCalls = 1
     for requestModel in RequestModel.objects.all():
         print("mod result" + str(geek.mod(numDestinations, 25)))
-        if numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
+        if requestModel.status == 0 and numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
             print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
             numApiCalls = 2
             destination = "|".join(destination)
@@ -418,6 +418,7 @@ def nearbyRequests(request):
             response = urllib.request.urlopen(url)
             responseJSON = json.loads(response.read())
 
+            print(responseJSON)
             for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
                 if (item.get("status", "none") != 'NOT_FOUND'):
                     distanceStr = item.get("distance", "none").get("value", "none")
@@ -574,7 +575,7 @@ def confirmClaim1(request):
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
             return HttpResponseRedirect(url)  # 4
-            
+
             requestObj.status = 2
             requestObj.save()
         elif 'no' in request.POST.keys():
