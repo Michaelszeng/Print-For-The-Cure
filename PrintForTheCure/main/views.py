@@ -533,6 +533,19 @@ def confirmClaim(request):
 
             donor = Donor.objects.get(user = request.user)
             donor.ppe += requestObj.numPPE
+            donor.requests += 1
+            if requestObj.typePPE == "shield":
+                print("Donor claimed shield")
+                donor.shields += requestObj.numPPE
+            elif requestObj.typePPE == "strap":
+                print("Donor claimed shield")
+                donor.straps += requestObj.numPPE
+            elif requestObj.typePPE == "opener":
+                print("Donor claimed shield")
+                donor.openers += requestObj.numPPE
+            elif requestObj.typePPE == "handle":
+                print("Donor claimed shield")
+                donor.handles += requestObj.numPPE
             donor.save()
 
             return HttpResponseRedirect(url)  # 4
@@ -585,6 +598,19 @@ def confirmClaim1(request):
 
             donor = Donor.objects.get(user = request.user)
             donor.ppe += requestObj.numPPE
+            donor.requests += 1
+            if requestObj.typePPE == "shield":
+                print("Donor claimed shield")
+                donor.shields += requestObj.numPPE
+            elif requestObj.typePPE == "strap":
+                print("Donor claimed shield")
+                donor.straps += requestObj.numPPE
+            elif requestObj.typePPE == "opener":
+                print("Donor claimed shield")
+                donor.openers += requestObj.numPPE
+            elif requestObj.typePPE == "handle":
+                print("Donor claimed shield")
+                donor.handles += requestObj.numPPE
             donor.save()
 
             return HttpResponseRedirect(url)  # 4

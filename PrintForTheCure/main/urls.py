@@ -23,6 +23,7 @@ urlpatterns = [
     path('confirmation/', views.confirmClaim, name='confirmation'),
     path('confirmation1/', views.confirmClaim1, name='confirmation returns to mapview'),
     path('thankyou/', views.thankYou, name='thank you page'),
+    path('donorLeaderboards/', views.leaderboards, name='leaderboard for donors'),
     path('register/terms', views.terms, name='terms page'),
     path('pp', views.pp, name='privacy policy'),
     path('requestPPE/terms', views.terms, name='terms page'),
