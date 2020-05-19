@@ -157,7 +157,7 @@ def donorRegistration(request):
                 newUser = User(username=request.POST['username'], password=request.POST['password'], email=request.POST['email'], first_name=request.POST['fName'], last_name=request.POST['lName'])
                 newUser.set_password(request.POST['password'])
                 newUser.save()
-                newDonor = Donor(user=newUser, address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], zipCode=request.POST['zipCode'], registrationDate=timezone.now())
+                newDonor = Donor(user=newUser, ppe=0, address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], zipCode=request.POST['zipCode'], registrationDate=timezone.now())
                 newDonor.save()
 
                 user = authenticate(username=request.POST['username'], password=request.POST['password'])
@@ -530,6 +530,11 @@ def confirmClaim(request):
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
             requestObj.status = 2
             requestObj.save()
+
+            donor = Donor.objects.get(user = request.user)
+            donor.ppe += requestObj.numPPE
+            donor.save()
+
             return HttpResponseRedirect(url)  # 4
 
 
@@ -577,6 +582,11 @@ def confirmClaim1(request):
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
             requestObj.status = 2
             requestObj.save()
+
+            donor = Donor.objects.get(user = request.user)
+            donor.ppe += requestObj.numPPE
+            donor.save()
+
             return HttpResponseRedirect(url)  # 4
 
 
@@ -597,6 +607,17 @@ def thankYou(request):
     template = loader.get_template('main/thankYou.html')
     context = {
         'requestDetails': requestDetails
+    }
+    return HttpResponse(template.render(context, request))
+
+def leaderboards(request):
+    allUsers = User.objects.all()
+    allDonors = Donor.objects.all()
+    template = loader.get_template('main/leaderboards.html')
+    context = {
+        'authenticated': request.user.is_authenticated,
+        'users': allUsers,
+        'donors': allDonors,
     }
     return HttpResponse(template.render(context, request))
 

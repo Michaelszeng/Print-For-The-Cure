@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Donor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ppe = models.IntegerField(default=0)
     address = models.CharField(max_length=255, default='')
     city = models.CharField(max_length=255, default='')
     state = models.CharField(max_length=2, default='')
