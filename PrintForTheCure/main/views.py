@@ -528,10 +528,11 @@ def confirmClaim(request):
             base_url = '/thankyou/'  # 1 /products/
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
-            return HttpResponseRedirect(url)  # 4
-
             requestObj.status = 2
             requestObj.save()
+            return HttpResponseRedirect(url)  # 4
+
+
         elif 'no' in request.POST.keys():
             return HttpResponseRedirect("/nearbyRequests/")
     template = loader.get_template('main/confirmClaim.html')
@@ -574,10 +575,11 @@ def confirmClaim1(request):
             base_url = '/thankyou/'  # 1 /products/
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
             url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
-            return HttpResponseRedirect(url)  # 4
-
             requestObj.status = 2
             requestObj.save()
+            return HttpResponseRedirect(url)  # 4
+
+
         elif 'no' in request.POST.keys():
             return HttpResponseRedirect("/nearbyRequests/")
     template = loader.get_template('main/confirmClaim.html')
