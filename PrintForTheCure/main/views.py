@@ -638,12 +638,63 @@ def thankYou(request):
 
 def leaderboards(request):
     allUsers = User.objects.all()
-    allDonors = Donor.objects.all()
+    usernamesSorted = []
+    namesSorted = []
+    ppeSorted = []
+    shieldsSorted = []
+    strapsSorted = []
+    openersSorted = []
+    handlesSorted = []
+    requestsSorted = []
+    citiesSorted = []
+    for user1 in User.objects.all():
+        #print(vars(user1))
+        try:
+            donor = Donor.objects.get(user = user1)
+        except:
+            print("User %s doesn't have donor" % user1.username)
+        else:
+        # if hasattr(user1, 'Donor'):     #hasattr() checks if the user has a linked donor obj
+            donor = Donor.objects.get(user = user1)
+            ppeSorted.append(donor.ppe)
+            usernamesSorted.append(user1.username)
+            namesSorted.append(user1.first_name + " " + user1.last_name)
+            shieldsSorted.append(donor.shields)
+            strapsSorted.append(donor.straps)
+            openersSorted.append(donor.openers)
+            handlesSorted.append(donor.handles)
+            requestsSorted.append(donor.requests)
+            citiesSorted.append(donor.city)
+
+    #Insertion Sorting
+    for i in range(1, len(ppeSorted)):
+        j = i
+        while j>=1 and ppeSorted[j] < ppeSorted[j-1]:
+            ppeSorted[j], ppeSorted[j-1] = ppeSorted[j-1], ppeSorted[j]
+            usernamesSorted[j], usernamesSorted[j-1] = usernamesSorted[j-1], usernamesSorted[j]
+            namesSorted[j], namesSorted[j-1] = namesSorted[j-1], namesSorted[j]
+            shieldsSorted[j], shieldsSorted[j-1] = shieldsSorted[j-1], shieldsSorted[j]
+            strapsSorted[j], strapsSorted[j-1] = strapsSorted[j-1], strapsSorted[j]
+            openersSorted[j], openersSorted[j-1] = openersSorted[j-1], openersSorted[j]
+            handlesSorted[j], handlesSorted[j-1] = handlesSorted[j-1], handlesSorted[j]
+            requestsSorted[j], requestsSorted[j-1] = requestsSorted[j-1], requestsSorted[j]
+            citiesSorted[j], citiesSorted[j-1] = citiesSorted[j-1], citiesSorted[j]
+            j -= 1
+
+        print(ppeSorted)
+
     template = loader.get_template('main/leaderboards.html')
     context = {
         'authenticated': request.user.is_authenticated,
-        'users': allUsers,
-        'donors': allDonors,
+        'usernamesSorted': usernamesSorted,
+        'namesSorted': namesSorted,
+        'ppeSorted': ppeSorted,
+        'shieldsSorted': shieldsSorted,
+        'strapsSorted': strapsSorted,
+        'openersSorted': openersSorted,
+        'handlesSorted': handlesSorted,
+        'requestsSorted': requestsSorted,
+        'citiesSorted': citiesSorted,
     }
     return HttpResponse(template.render(context, request))
 

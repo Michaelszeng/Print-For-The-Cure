@@ -42,11 +42,11 @@
     <style>
       /*Home Background Picture*/
       .main-pict {
-        height: 300px;
+        height: 600px;
         position: relative;
       }
       .main-pict .header-content-fixed {
-        height: 300px;
+        height: 600px;
         background: url(https://images.pexels.com/photos/3881247/pexels-photo-3881247.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260) no-repeat center;
         background-size: cover;
         background-attachment: fixed;
@@ -199,8 +199,26 @@
       .minHeight {
         min-height: 100vh;
       }
-      .border {
-        border: solid thick;
+      .borderWide {
+        border-width:10px !important;
+
+      }
+      table {
+        counter-reset: rowNumber;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .tableNumbered tr::before {
+        display: table-cell;
+        counter-increment: rowNumber;
+        content: counter(rowNumber) ".";
+        padding-right: 0.3em;
+        padding-left: 1em;
+        text-align: right;
+      }
+      .grad {
+        background-image: linear-gradient(to bottom right, rgb(20, 210, 219), rgb(48, 186, 85));
       }
     </style>
   </head>
@@ -271,16 +289,79 @@
     </header>
 
     <section>
-      <div class="col-md-4 minHeight border" style="background-color: lightblue;">
-        <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-4 minHeight" style="background-color: rgb(255, 255, 255);">
+          <div align=center>
+            <h2 class="text-uppercase color-dark text-bold no-margin" style="padding-top: 3%;; padding-bottom: 3%;">Donor Leaderboard<h2>
+          </div>
+          <table class="table table-striped table-hover" style="margin-left:1.375%;">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">User</th>
+                <th scope="col">PPE Claimed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <script>
+                counter=0;
+              </script>
+              {% for username in usernamesSorted %}
+                <!-- <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="counter{{ username }}" name="counter{{ username }}" value="{{ username }}"></input>
+                </form> -->
 
+                <tr>
+                  <th scope="row" id="donorNum{{ username }}">1</th>
+                  <td>{{ username }}</td>
+                  <td id="numPPE{{ username }}">{{ppeSorted.forloop.counter}}</td>
+                </tr>
+
+                <script>
+                  counter = counter + 1;
+                  document.getElementById("donorNum{{ username }}").innerHTML = counter;
+                  // document.getElementById("counter{{ username }}").value = counter;
+                  document.getElementById("numPPE{{ username }}").innerHTML = counter;
+                </script>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- <table class="tableNumbered">
+            <tr>
+              <div class="row">
+                <div class="col-md-9">
+                  <td>blue</td>
+                </div>
+                <div class="col-md-3">
+                  <td>hi</td>
+                </div>
+              </div>
+            </tr>
+            <tr>
+              <div class="row">
+                <div class="col-md-9">
+                  <td>blue</td>
+                </div>
+                <div class="col-md-3">
+                  <td>hi</td>
+                </div>
+              </div>
+            </tr>
+            <tr><td>yellow</td></tr>
+            <tr><td>green</td></tr>
+            <tr><td>purple</td></tr>
+            <tr><td>orange</td></tr>
+            <tr><td>maroon</td></tr>
+            <tr><td>mauve</td></tr>
+            <tr><td>lavender</td></tr>
+            <tr><td>pink</td></tr>
+            <tr><td>brown</td></tr>
+          </table> -->
         </div>
-        <div class="col-md-3">
-
+        <div class="col-md-8 minHeight grad" align="center">
+          <h2 class="text-uppercase color-dark text-bold no-margin" style="padding-top: 3%;; padding-bottom: 3%;">Donor Database<h2>
         </div>
-      </div>
-      <div class="col-md-8 minHeight" style="background-color: lightblue;">
-
       </div>
     </section>
 
