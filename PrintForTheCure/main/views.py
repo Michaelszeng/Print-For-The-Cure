@@ -669,7 +669,7 @@ def leaderboards(request):
     #Insertion Sorting
     for i in range(1, len(ppeSorted)):
         j = i
-        while j>=1 and ppeSorted[j] < ppeSorted[j-1]:
+        while j>=1 and ppeSorted[j] > ppeSorted[j-1]:
             ppeSorted[j], ppeSorted[j-1] = ppeSorted[j-1], ppeSorted[j]
             usernamesSorted[j], usernamesSorted[j-1] = usernamesSorted[j-1], usernamesSorted[j]
             namesSorted[j], namesSorted[j-1] = namesSorted[j-1], namesSorted[j]
@@ -683,6 +683,9 @@ def leaderboards(request):
 
         print(ppeSorted)
 
+    usernamesAndCities = dict(zip(usernamesSorted, citiesSorted))
+    print(usernamesAndCities)
+
     template = loader.get_template('main/leaderboards.html')
     context = {
         'authenticated': request.user.is_authenticated,
@@ -695,6 +698,7 @@ def leaderboards(request):
         'handlesSorted': handlesSorted,
         'requestsSorted': requestsSorted,
         'citiesSorted': citiesSorted,
+        'usernamesAndCities': usernamesAndCities
     }
     return HttpResponse(template.render(context, request))
 

@@ -208,6 +208,11 @@
         border-collapse: collapse;
         width: 100%;
       }
+      tr {
+        line-height: 3.5em;
+        min-height: 3.5em;
+        height: 3.5em;
+      }
 
       .tableNumbered tr::before {
         display: table-cell;
@@ -222,7 +227,7 @@
       }
 
       .gradProfile {
-        background-image: linear-gradient(to bottom right, rgb(125, 125, 125), rgb(0, 0, 0));
+        background-image: linear-gradient(to bottom right, rgb(190, 190, 190), rgb(255, 255, 255));
       }
       .container1 {
         width: 75%;
@@ -242,6 +247,11 @@
         background: -webkit-linear-gradient(rgb(20, 210, 219), rgb(48, 186, 85));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+      .content {
+        position: absolute;
+        top: 0;  bottom: 0;  left: 0;  right: 0;
+	      padding: 0 24px; /* Optional padding for content area */
       }
     </style>
   </head>
@@ -354,29 +364,34 @@
             </tbody>
           </table>
         </div>
+
+        <!--BEGIN DONOR DATABASE-->
         <div class="col-md-8 minHeight grad" align="center">
           <h2 class="text-uppercase color-dark text-bold no-margin" style="padding-top: 3%;; padding-bottom: 5%;">Donor Database</h2>
-          <div class="row">
-            <div class="col-md-3" align="center">
-              <div class="container1 gradProfile" style="border-radius: 3em;">
-                <h2 class="gradText text-uppercase text-bold no-margin" style="font-family: sans-serif;">M</h2>
+          <div class="row" style="padding-bottom: 5%;">
+          {% for username, city in usernamesAndCities.items %}
+            <div class="col-md-3">
+              <div class="container1 gradProfile" style="border-radius: 30%;">
+                <div class="content">
+                  <h2 id="letter{{ username }}" class="gradText text-uppercase text-bold no-margin" style="font-family: sans-serif; margin-left: auto; margin-right: auto; margin-top: 5%; margin-bottom: -5%;"></h2>
+                  <h5 class="text-uppercase text-bold no-margin" style="color:black; margin-bottom: 14%;">{{username}}</h5>
+                  <p id="ppeClaimed{{ username }}" style="text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">PPE Claimed: __</p>
+                  <p id="requestsClaimed{{ username }}" style="text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Requests Claimed: __</p>
+                  <p id="city{{ username }}" style="text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Location: {{ city }}</p>
+                </div>
               </div>
             </div>
-            <div class="col-md-3" align="center">
-              <div class="container1 gradProfile" style="border-radius: 3em;">
-
+            <script>
+              document.getElementById("letter{{ username }}").innerHTML = "{{ username }}".charAt(0);
+              document.getElementById("ppeClaimed{{ username }}").innerHTML = "PPE Claimed: " + {{ ppeSorted }}[{{ forloop.counter }}-1];
+              document.getElementById("requestsClaimed{{ username }}").innerHTML = "Requests Claimed: " + {{ requestsSorted }}[{{ forloop.counter }}-1];
+              // document.getElementById("city{{ username }}").innerHTML = "Location: ";
+            </script>
+            {% if forloop.counter|divisibleby:4 and forloop.counter != 0 %}
               </div>
-            </div>
-            <div class="col-md-3" align="center">
-              <div class="container1 gradProfile" style="border-radius: 3em;">
-
-              </div>
-            </div>
-            <div class="col-md-3" align="center">
-              <div class="container1 gradProfile" style="border-radius: 3em;">
-
-              </div>
-            </div>
+              <div class="row" style="padding-bottom: 5%;">
+            {% endif %}
+          {% endfor %}
           </div>
         </div>
       </div>
