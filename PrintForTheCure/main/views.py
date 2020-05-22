@@ -73,6 +73,8 @@ def home(request):
             return HttpResponseRedirect("/catalogue-handle/")
         elif 'guide' in request.POST.keys():
             return HttpResponseRedirect("/donorGuide/")
+        elif 'leaderboard' in request.POST.keys():
+            return HttpResponseRedirect("/donorLeaderboards/")
 
     template = loader.get_template('main/home.html')
     context = {     #all inputs for the html go in these brackets
