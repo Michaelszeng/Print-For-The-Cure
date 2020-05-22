@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -75,6 +76,8 @@ def home(request):
             return HttpResponseRedirect("/donorGuide/")
         elif 'leaderboard' in request.POST.keys():
             return HttpResponseRedirect("/donorLeaderboards/")
+        elif 'donate' in request.POST.keys():
+            return redirect("https://www.gofundme.com/f/printforthecure")
 
     template = loader.get_template('main/home.html')
     context = {     #all inputs for the html go in these brackets
