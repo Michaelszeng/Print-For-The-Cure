@@ -343,8 +343,8 @@
               <h2 class="text-uppercase color-dark text-bold no-margin">How Can I Help?</h2>
               <div class="title-icon"> <i class="fa fa-location-arrow"></i> </div>
               <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-3 text-center" style="padding-top: 20px;">
+                <div class="col-md-2"></div>
+                <div class="col-md-4 text-center" style="padding-top: 20px;">
                   <form style="padding-bottom:1em;" method="POST">
                     <!-- Every <form> element needs a csrf_token as a security precaution. -->
                     {% csrf_token %}
@@ -354,7 +354,7 @@
                     <button class="btn btn-default btn-flat-solid btn-pill">User Guide For PPE Donors</button>
                   </form>
                 </div>
-                <div class="col-md-3 text-center" style="padding-top: 20px;">
+                <div class="col-md-4 text-center" style="padding-top: 20px;">
                   <form style="padding-bottom:1em;" method="POST">
                     <!-- Every <form> element needs a csrf_token as a security precaution. -->
                     {% csrf_token %}
@@ -364,7 +364,7 @@
                     <button class="btn btn-default btn-flat-solid btn-pill">Support through Funding</button>
                   </form>
                 </div>
-                <div class="col-md-3"></div>
+                <div class="col-md-2"></div>
               </div>
             </div>
           </div>
@@ -493,7 +493,7 @@
 
 
 
-      <section id="map" class="block-section">
+      <!-- <section id="map" class="block-section">
         <div class=" shape-bottom">
           <div class="bg-secondary bg-dark block-title">
             <div class="container">
@@ -501,10 +501,7 @@
               <div class="title-icon"> <i class="fa fa-cube"></i> </div>
               <div class="text-center" style="padding-top: 20px;">
                 <form style="padding-bottom:1em;" method="POST">
-                  <!-- Every <form> element needs a csrf_token as a security precaution. -->
                   {% csrf_token %}
-                  <!-- I use the hidden input element to send along the information that
-                    we are logging out. -->
                   <input type="hidden" name="leaderboard"></input>
                   <button style="background-color: rgb(0, 201, 219);" class="btn btn-default btn-flat-solid btn-pill">See The Donor Leaderboards</button>
                 </form>
@@ -512,7 +509,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
 
 
 
