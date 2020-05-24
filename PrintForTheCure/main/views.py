@@ -38,16 +38,18 @@ def home(request):
         if requestModel.status == 2 or requestModel.status == 3:
             claimedPPE += requestModel.numPPE   #increment the number of claimed PPE
             #If it's been more than 10 days since the delivery date, and the request has been claimed, send the automated email msg asking for a donation
-        if requestModel.status == 2:
-            if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=10):
-                print("request Expired. Delivery Date: " + str(requestModel.delivDate) + "   Current Date: " + str(timezone.now().date()))
-                service = getService()
-                subject = "Support Print For The Cure"
-                message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
-                message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
-                sendMessage(service, 'me', message)
-                requestModel.status = 3
-                requestModel.save()
+
+        #
+        # if requestModel.status == 2:
+        #     if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=10):
+        #         print("request Expired. Delivery Date: " + str(requestModel.delivDate) + "   Current Date: " + str(timezone.now().date()))
+        #         service = getService()
+        #         subject = "Support Print For The Cure"
+        #         message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
+        #         message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
+        #         sendMessage(service, 'me', message)
+        #         requestModel.status = 3
+        #         requestModel.save()
 
     claimedPPE = claimedPPE - geek.mod(claimedPPE, 10)
 
