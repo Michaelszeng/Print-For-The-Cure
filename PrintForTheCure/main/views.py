@@ -35,7 +35,7 @@ def home(request):
 
     claimedPPE = 0
     for requestModel in RequestModel.objects.all():
-        if requestModel.status == 2:
+        if requestModel.status == 2 or requestModel.status == 3:
             claimedPPE += requestModel.numPPE   #increment the number of claimed PPE
             #If it's been more than 10 days since the delivery date, and the request has been claimed, send the automated email msg asking for a donation
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=10):
