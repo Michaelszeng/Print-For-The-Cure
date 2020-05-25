@@ -584,8 +584,8 @@
 
             <div class="form-group">
               <label for="numPPE">Amount of Specified Personal Protection Equipment You Need:</label>
-              <p style="font-size:90%; margin-top: -12px; margin-bottom: -2px;">Quantity is limited to ensure donors are able to fulfill. To request more, please submit multiple requests.</p>
-              <select id="num" class="form-control form-flat" name="numPPE">
+              <p id="numMessage" style="font-size:90%; margin-top: -12px; margin-bottom: -2px;">Quantity is limited to ensure donors are able to fulfill. To request more, please submit multiple requests.</p>
+              <select onchange="checkOverHundredShields()" id="num" class="form-control form-flat" name="numPPE">
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
@@ -674,10 +674,22 @@
                 <option value="1900">1900</option>
                 <option value="2000">2000</option>
               </select>
+              <p id="numMessage1"></p>
             </div>
+            <script>
+              function checkOverHundredShields() {
+                var num = document.getElementById("num").value;
+                if (num > 100) {
+                  var type = document.getElementById("typeOfPPE").value;
+                  if (type == "shield") {
+                    document.getElementById("numMessage1").innerHTML = "Requests of 100+ Face Shields may require Assembly (Press-fitting Transparency Sheets onto 3D printed frame)";
+                  }
+                }
+              }
+            </script>
 
             <div>
-              <label for="deliveryDate">Ideal Delivery Date (delivery date not guarenteed) For Specified Personal Protection Equipment: </label>
+              <label for="deliveryDate">Ideal Delivery Date (delivery date not guarenteed) For PPE: </label>
               <p style="margin-top: -12px; margin-bottom: -2px">Please give your donor enough time produce & ship your PPE! <span style="color: red;">Required lead-time of 4+ days.</span></p>
               <select name="month">
                 <option value="1">01</option>
