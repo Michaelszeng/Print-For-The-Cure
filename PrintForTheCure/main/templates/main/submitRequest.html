@@ -364,7 +364,7 @@
               <label for="typePPE">Door Handle Type <a style="font-size:70%; padding-top: -12px; margin-bottom: -2px" type="submit" href="/catalogue-handle/">(Which Type Do You Need?)</a>:</label><br />
               <a style="padding-top: -12px; margin-bottom: -2px" type="submit" href="/catalogue-handle/">More Info About Hands-free Door Handles</a>
               <select class="form-control form-flat" name="typeHandle">
-                <option value="">----select----</option>
+                <option value="" selected disabled>----select----</option>
                 <option value="Cylindrical, Narrow">Cylindrical, Narrow</option>
                 <option value="Cylindrical, Wide">Cylindrical, Wide</option>
                 <option value="Rectangular, Narrow, Horizontal">Rectangular, Narrow, Horizontal</option>
@@ -691,7 +691,7 @@
             <div>
               <label for="deliveryDate">Ideal Delivery Date (delivery date not guarenteed) For PPE: </label>
               <p style="margin-top: -12px; margin-bottom: -2px">Please give your donor enough time produce & ship your PPE! <span style="color: red;">Required lead-time of 4+ days.</span></p>
-              <select name="month">
+              <select onchange="checkHandle()" name="month">
                 <option value="1">01</option>
                 <option value="2">02</option>
                 <option value="3">03</option>
@@ -705,7 +705,7 @@
                 <option value="11">11</option>
                 <option value="12">12</option>
               </select>
-              <select name="day">
+              <select onchange="checkHandle()" name="day">
                 <option value="1">01</option>
                 <option value="2">02</option>
                 <option value="3">03</option>
@@ -746,10 +746,10 @@
             <br />
             <div class="form-group">
               <label for="otherNotes">Other Notes For Donor:</label>
-              <textarea class="form-control form-flat" name="otherNotes" rows="6"></textarea>
+              <textarea onchange="checkHandle()" class="form-control form-flat" name="otherNotes" rows="6"></textarea>
             </div>
 
-            <input type="checkbox" id="agreeTermsCheck" name="agreeTermsCheck" value="Agreed" required>
+            <input onchange="checkHandle()" type="checkbox" id="agreeTermsCheck" name="agreeTermsCheck" value="Agreed" required>
             <label for="agreeTermsCheck">I agree with <a href="terms">the terms</a> and <a href="/pp">privacy policy</a></label><br>
 
             <button type="submit" class="btn-xs btn-default  btn-flat-solid">Submit Request For PPE</button>

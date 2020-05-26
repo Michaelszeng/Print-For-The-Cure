@@ -43,11 +43,14 @@ def home(request):
         if requestModel.status == 2:
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=10):
                 print("request Expired. Delivery Date: " + str(requestModel.delivDate) + "   Current Date: " + str(timezone.now().date()))
-                service = getService()
-                subject = "Support Print For The Cure"
-                message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
-                message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
-                sendMessage(service, 'me', message)
+                try:
+                    service = getService()
+                    subject = "PPE Delivery Successful?"
+                    message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
+                    message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
+                    sendMessage(service, 'me', message)
+                except:
+                    print("PPE Delivery Successful Email Failed To Send")
                 requestModel.status = 3
                 requestModel.save()
 
@@ -243,6 +246,12 @@ def doctorRequest(request):
             print(e.errors)
             validated = False
             validationStatus += "Sorry, Address Validation failed. Please enter a valid address for delivery.\n"
+        if request.POST['typePPE'] == "handle":
+            try:
+                typeHandle = request.POST['typeHandle']
+            except:
+                validated = False
+                validationStatus += "Please include a type of door handle. "
         if (len(request.POST['fName']) < 1) or (len(request.POST['lName']) < 1) or (len(request.POST['email']) < 1):
             validated = False
             validationStatus += "Please ensure all fields are filled out. "
@@ -255,9 +264,14 @@ def doctorRequest(request):
         if validated:
             print("Address Validation Succeeded")
 
-            newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'], phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle=request.POST['typeHandle'], address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
-            print(request.POST['lat'] + ", " + request.POST['lng'])
-            newRequest.save()
+            if request.POST['typePPE'] == "handle":
+                newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'], phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle=request.POST['typeHandle'], address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
+                print(request.POST['lat'] + ", " + request.POST['lng'])
+                newRequest.save()
+            else:
+                newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'], phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle="", address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
+                print(request.POST['lat'] + ", " + request.POST['lng'])
+                newRequest.save()
 
             requestObj = RequestModel.objects.get(id=newRequest.id)
             service = getService()
