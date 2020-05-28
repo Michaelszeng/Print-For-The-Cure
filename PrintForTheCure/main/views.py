@@ -43,7 +43,7 @@ def home(request):
         if requestModel.status == 2:
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=10):
                 print("request Expired. Delivery Date: " + str(requestModel.delivDate) + "   Current Date: " + str(timezone.now().date()))
-                try:
+                try:    #ensure fake emails don't crash website
                     service = getService()
                     subject = "PPE Delivery Successful?"
                     message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
@@ -174,12 +174,15 @@ def donorRegistration(request):
                 user = authenticate(username=request.POST['username'], password=request.POST['password'])
                 login(request, user)
 
-                service = getService()
-                #Donor Email
-                subject = "PrintForTheCure Registration Details"
-                message_text = "Thank you for registing with PrintForTheCure! Now you can get started claiming and fulfilling PPE requests on printforthecure.com!\n\nYour Username: %s" % (request.POST['username'])
-                message = makeMessage("printforthecure@gmail.com", request.POST['email'], subject, message_text)
-                sendMessage(service, 'me', message)
+                try:    #ensure fake emails don't crash website
+                    service = getService()
+                    #Donor Email
+                    subject = "PrintForTheCure Registration Details"
+                    message_text = "Thank you for registing with PrintForTheCure! Now you can get started claiming and fulfilling PPE requests on printforthecure.com!\n\nYour Username: %s" % (request.POST['username'])
+                    message = makeMessage("printforthecure@gmail.com", request.POST['email'], subject, message_text)
+                    sendMessage(service, 'me', message)
+                except:
+                    print("email verification failed")
 
                 return HttpResponseRedirect("/registrationSuccessful/")
         else:
@@ -366,6 +369,9 @@ def requestPopup(request):
     }
     return HttpResponse(template.render(context, request))
 
+def take_first(elem):
+    return elem[0]
+
 def nearbyRequests(request):
     # print(request.user.is_authenticated)
     for requestModel in RequestModel.objects.all():
@@ -485,14 +491,20 @@ def nearbyRequests(request):
 
     #Insertion Sorting
     #Sort the distances, then rearrange allUnclaimedRequests
-    for i in range(1, len(allDistances)):
-        j = i
-        while j>=1 and allDistances[j] < allDistances[j-1]:
-            allDistances[j], allDistances[j-1] = allDistances[j-1], allDistances[j]
-            allUnclaimedRequests[j], allUnclaimedRequests[j-1] = allUnclaimedRequests[j-1], allUnclaimedRequests[j]
-            j -= 1
+    # for i in range(1, len(allDistances)):
+    #     j = i
+    #     while j>=1 and allDistances[j] < allDistances[j-1]:
+    #         allDistances[j], allDistances[j-1] = allDistances[j-1], allDistances[j]
+    #         allUnclaimedRequests[j], allUnclaimedRequests[j-1] = allUnclaimedRequests[j-1], allUnclaimedRequests[j]
+    #         j -= 1
 
-    print(allDistances)
+
+    keydict = dict(zip(allUnclaimedRequests, allDistances))
+    allUnclaimedRequests.sort(key=keydict.get)
+    print(allUnclaimedRequests)
+
+    # allUnclaimedRequests.sort(key=lambda x: x.count, reverse=False)
+
 
     template = loader.get_template('main/nearbyRequests.html')
     context = {     #all inputs for the html go in these brackets
