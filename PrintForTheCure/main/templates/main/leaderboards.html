@@ -348,7 +348,7 @@
 
                 <tr>
                   <th scope="row" id="donorNum{{ username }}">1</th>
-                  <td>{{ username }}</td>
+                  <td id="username1{{ username }}">{{ username }}</td>
                   <td id="numPPE{{ username }}">{{ppeSorted.forloop.counter}}</td>
                   <td id="numRequests{{ username }}">{{requestsSorted.forloop.counter}}</td>
                 </tr>
@@ -359,6 +359,12 @@
                   // document.getElementById("counter{{ username }}").value = counter;
                   document.getElementById("numPPE{{ username }}").innerHTML = {{ ppeSorted }}[counter-1];
                   document.getElementById("numRequests{{ username }}").innerHTML = {{ requestsSorted }}[counter-1];
+
+                  if (document.getElementById("username1{{ username }}").innerHTML.length > 30) {
+                    console.log("Username Name Too Long");
+                    var shortC = document.getElementById("username1{{ username }}").innerHTML.substring(0, 31)
+                    document.getElementById("username1{{ username }}").innerHTML = shortC + "...";
+                  }
                 </script>
               {% endfor %}
             </tbody>
@@ -370,14 +376,14 @@
           <h2 class="text-uppercase color-dark text-bold no-margin" style="padding-top: 3%;; padding-bottom: 5%;">Donor Database</h2>
           <div class="row" style="padding-bottom: 5%;">
           {% for username, city in usernamesAndCities.items %}
-            <div class="col-md-3">
-              <div class="container1 gradProfile" style="border-radius: 30%;">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div id="donorBox" class="container1 gradProfile" style="border-radius: 30%;">
                 <div class="content" style="position: absolute; position: absolute; white-space: nowrap;">
                   <h2 id="letter{{ username }}" class="gradText text-uppercase text-bold no-margin" style="font-family: sans-serif; margin-left: auto; margin-right: auto; margin-top: 5%; margin-bottom: -5%;"></h2>
-                  <h5 class="text-uppercase text-bold no-margin" style="font-size:1.2vw; color:black; margin-bottom: 14%;">{{username}}</h5>
-                  <p id="ppeClaimed{{ username }}" style="font-size:0.9vw; text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">PPE Claimed: __</p>
-                  <p id="requestsClaimed{{ username }}" style="font-size:0.9vw; text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Requests Claimed: __</p>
-                  <p id="city{{ username }}" style="font-size:0.9vw; text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Location: {{ city }}</p>
+                  <h5 class="text-uppercase text-bold no-margin" id="username{{ username }}" style="font-size:1.2em; color:black; margin-bottom: 14%;">{{username}}</h5>
+                  <p id="ppeClaimed{{ username }}" style="font-size:100%; text-align:left; text-indent: -1%; margin: -0.1em; color: rgb(100, 100, 100)">PPE Claimed: __</p>
+                  <p id="requestsClaimed{{ username }}" style="font-size:100%; text-align:left; text-indent: -1%; margin: -0.1em; color: rgb(100, 100, 100)">Requests Claimed: __</p>
+                  <p id="city{{ username }}" style="font-size:100%; text-align:left; text-indent: -1%; margin: -0.1em; color: rgb(100, 100, 100)">Location: {{ city }}</p>
                 </div>
               </div>
             </div>
@@ -386,6 +392,39 @@
               document.getElementById("ppeClaimed{{ username }}").innerHTML = "PPE Claimed: " + {{ ppeSorted }}[{{ forloop.counter }}-1];
               document.getElementById("requestsClaimed{{ username }}").innerHTML = "Requests Claimed: " + {{ requestsSorted }}[{{ forloop.counter }}-1];
               // document.getElementById("city{{ username }}").innerHTML = "Location: ";
+
+              var boxHeight = document.getElementById('donorBox').clientHeight;
+
+              var fontSizeLetter = boxHeight * 0.29;
+              var fontSizeH = boxHeight * 0.1;
+              var fontSizeP = boxHeight * 0.075;
+              document.getElementById("letter{{ username }}").style.fontSize = fontSizeLetter + "px";
+              document.getElementById("username{{ username }}").style.fontSize = fontSizeH + "px";
+              document.getElementById("ppeClaimed{{ username }}").style.fontSize = fontSizeP + "px";
+              document.getElementById("requestsClaimed{{ username }}").style.fontSize = fontSizeP + "px";
+              document.getElementById("city{{ username }}").style.fontSize = fontSizeP + "px";
+
+              document.getElementById("letter{{ username }}").style.marginBottom = -boxHeight * 0.01 + "px";
+              document.getElementById("username{{ username }}").style.marginBottom = boxHeight * 0.06 + "px";
+              document.getElementById("ppeClaimed{{ username }}").style.margin = -boxHeight * 0.035 + "px";
+              document.getElementById("requestsClaimed{{ username }}").style.margin = -boxHeight * 0.035 + "px";
+              document.getElementById("city{{ username }}").style.margin = -boxHeight * 0.035 + "px";
+              //Begin squaring boxHeight to make the size of the div have more impact than the constant
+              document.getElementById("ppeClaimed{{ username }}").style.marginLeft = boxHeight * boxHeight * 0.00003 + "px";
+              document.getElementById("requestsClaimed{{ username }}").style.marginLeft = boxHeight * boxHeight * 0.00003+ "px";
+              document.getElementById("city{{ username }}").style.marginLeft = boxHeight * boxHeight * 0.00003+ "px";
+
+              console.log("Username Length: " + document.getElementById("username{{ username }}").innerHTML.length);
+              if (document.getElementById("username{{ username }}").innerHTML.length > 11) {
+                console.log("Username Too Long");
+                var shortU = document.getElementById("username{{ username }}").innerHTML.substring(0, 12)
+                document.getElementById("username{{ username }}").innerHTML = shortU + "...";
+              }
+              if (document.getElementById("city{{ username }}").innerHTML.length > 24) {
+                console.log("City Name Too Long");
+                var shortC = document.getElementById("city{{ username }}").innerHTML.substring(0, 25)
+                document.getElementById("city{{ username }}").innerHTML = shortC + "...";
+              }
             </script>
             {% if forloop.counter|divisibleby:4 and forloop.counter != 0 %}
               </div>
