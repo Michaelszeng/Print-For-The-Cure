@@ -720,6 +720,14 @@ def leaderboards(request):
     usernamesAndCities = dict(zip(usernamesSorted, citiesSorted))
     print(usernamesAndCities)
 
+    if request.method == 'POST':
+        if 'login' in request.POST.keys():
+            return HttpResponseRedirect("/login/")
+        if 'logout' in request.POST.keys():
+            print(request.user.is_authenticated)
+            logout(request)
+            return HttpResponseRedirect("/login/")
+
     template = loader.get_template('main/leaderboards.html')
     context = {
         'authenticated': request.user.is_authenticated,

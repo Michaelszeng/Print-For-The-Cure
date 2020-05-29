@@ -372,12 +372,12 @@
           {% for username, city in usernamesAndCities.items %}
             <div class="col-md-3">
               <div class="container1 gradProfile" style="border-radius: 30%;">
-                <div class="content">
+                <div class="content" style="position: absolute; position: absolute; white-space: nowrap;">
                   <h2 id="letter{{ username }}" class="gradText text-uppercase text-bold no-margin" style="font-family: sans-serif; margin-left: auto; margin-right: auto; margin-top: 5%; margin-bottom: -5%;"></h2>
-                  <h5 class="text-uppercase text-bold no-margin" style="color:black; margin-bottom: 14%;">{{username}}</h5>
-                  <p id="ppeClaimed{{ username }}" style="text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">PPE Claimed: __</p>
-                  <p id="requestsClaimed{{ username }}" style="text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Requests Claimed: __</p>
-                  <p id="city{{ username }}" style="text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Location: {{ city }}</p>
+                  <h5 class="text-uppercase text-bold no-margin" style="font-size:1.2vw; color:black; margin-bottom: 14%;">{{username}}</h5>
+                  <p id="ppeClaimed{{ username }}" style="font-size:0.9vw; text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">PPE Claimed: __</p>
+                  <p id="requestsClaimed{{ username }}" style="font-size:0.9vw; text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Requests Claimed: __</p>
+                  <p id="city{{ username }}" style="font-size:0.9vw; text-align:left; text-indent: -1%; margin: -10%; color: rgb(100, 100, 100)">Location: {{ city }}</p>
                 </div>
               </div>
             </div>
