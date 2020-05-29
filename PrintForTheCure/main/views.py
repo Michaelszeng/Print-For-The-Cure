@@ -691,7 +691,6 @@ def leaderboards(request):
         # if hasattr(user1, 'Donor'):     #hasattr() checks if the user has a linked donor obj
             donor = Donor.objects.get(user = user1)
             ppeSorted.append(donor.ppe)
-            usernamesSorted.append(user1.username)
             namesSorted.append(user1.first_name + " " + user1.last_name)
             shieldsSorted.append(donor.shields)
             strapsSorted.append(donor.straps)
@@ -699,6 +698,10 @@ def leaderboards(request):
             handlesSorted.append(donor.handles)
             requestsSorted.append(donor.requests)
             citiesSorted.append(donor.city)
+            if "printforthecure" in user1.username:
+                usernamesSorted.append("Organized Initiatives")
+            else:
+                usernamesSorted.append(user1.username)
 
     #Insertion Sorting
     for i in range(1, len(ppeSorted)):
