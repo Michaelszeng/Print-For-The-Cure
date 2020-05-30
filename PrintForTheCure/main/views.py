@@ -85,6 +85,25 @@ def home(request):
         elif 'donate' in request.POST.keys():
             return redirect("https://www.gofundme.com/f/printforthecure")
 
+    for requestModel in RequestModel.objects.all():
+        print(requestModel.lat)
+        if requestModel.lat-0.0 < 0.1 and requestModel.lng-0.0 < 0.1:   #don't use ==0 since double comparisions are bad
+            address = requestModel.address
+            url = ('https://maps.googleapis.com/maps/api/geocode/json' + '?address={}' + '&key={}').format(urllib.parse.quote(address, safe=""), key)
+            response = urllib.request.urlopen(url)
+            responseJSON = json.loads(response.read())
+            requestModel.lat = responseJSON.get("results")[0].get("geometry").get("location").get("lat")
+            requestModel.lng = responseJSON.get("results")[0].get("geometry").get("location").get("lng")
+            requestModel.save()
+
+    # for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
+    #     if (item.get("status", "none") != 'NOT_FOUND'):
+    #         print(item)
+            # distanceStr = item.get("distance", "none").get("value", "none")
+            # print("hi" + str(distanceStr))
+            # allDistances.append(distanceStr)
+            #print(item.get("distance", "none").get("text", "none"))
+
     template = loader.get_template('main/home.html')
     context = {     #all inputs for the html go in these brackets
         'authenticated': request.user.is_authenticated,
