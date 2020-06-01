@@ -418,6 +418,20 @@ def nearbyRequests(request):
         return HttpResponseRedirect("/notLoggedIn/")
     if request.method == 'POST':
         if request.user.is_authenticated:
+            if 'confirmClaims' in request.POST.keys():
+                # print("request.post: ", vars(request))
+                base_url = '/confirmation/'
+                for keyIndex, postKey in enumerate(request.POST.keys()):
+                    if "checkBox" in postKey:
+                        idNum = postKey[8:]
+                        print(idNum)
+                        base_url += '?requestObjId' + str(keyIndex) + "=" + idNum
+                        # query_string = urlencode({'requestObjId' + str(keyIndex): idNum})
+
+                # url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
+                url = base_url
+                print(url)
+                return HttpResponseRedirect(url)
             if 'requestObjId' in request.POST.keys():
                 # print("Request ID: " + request.POST['requestModelId'])
 
@@ -456,20 +470,19 @@ def nearbyRequests(request):
     numDestinations = 1
     numApiCalls = 1
     for requestModel in RequestModel.objects.all():
-        print("mod result" + str(geek.mod(numDestinations, 25)))
+        # print("mod result" + str(geek.mod(numDestinations, 25)))
         if requestModel.status == 0 and numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
-            print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
+            # print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
             numApiCalls = 2
             destination = "|".join(destination)
             url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
             response = urllib.request.urlopen(url)
             responseJSON = json.loads(response.read())
 
-            print(responseJSON)
+            # print(responseJSON)
             for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
                 if (item.get("status", "none") != 'NOT_FOUND'):
                     distanceStr = item.get("distance", "none").get("value", "none")
-                    print("hi" + str(distanceStr))
                     allDistances.append(distanceStr)
                     #print(item.get("distance", "none").get("text", "none"))
             destination = []
@@ -670,7 +683,7 @@ def confirmClaim1(request):
 
 
         elif 'no' in request.POST.keys():
-            return HttpResponseRedirect("/nearbyRequests/")
+            return HttpResponseRedirect("/requestsVisual/")
     template = loader.get_template('main/confirmClaim.html')
     context = {     #all inputs for the html go in these brackets
         'requestObj': requestObj,

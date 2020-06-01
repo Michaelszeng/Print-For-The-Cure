@@ -209,9 +209,20 @@
       .divStopOverflow {
         word-wrap: break-word;
       }
+      .col-md-1-5 { width: 12.5%; }
+      .col-md-2-5 { width: 20.83333%; }
+      .col-md-3-5 { width: 29.16667%; }
+      .col-md-4-5 { width: 37.5%; }
+      .col-md-5-5 { width: 45.83333%; }
+      .col-md-6-5 { width: 54.16667%; }
+      .col-md-7-5 { width: 62.5%; }
+      .col-md-8-5 { width: 70.83333%; }
+      .col-md-9-5 { width: 79.16667%; }
+      .col-md-10-5 { width: 87.5%; }
+      .col-md-11-5 { width: 95.8333%; }
     </style>
   </head>
-  <body>
+  <body style="background-color: #ebebeb">
     <div class="subash">
       <div class="toogle-bars">
         <a href="#menu-collapse" data-toggle="collapse" class="collapsed"><i class="fa fa-bars ic-open"></i> <i class="fa fa-remove ic-close"></i> MENU</a>
@@ -248,67 +259,90 @@
     </div><!-- End Main navbar -->
 
 
-
+    <form method="POST">
+      {% csrf_token %}
     <div class="wrapper bg">
       <div class="block-page" >
-        <div class="container-sm clearfix">
-          <h1 style="padding-top: 3%;" class="text-uppercase color-dark"> Requests Nearest To You</h1>
-            <div class="row">
-              <div class="col-md-6">
-                <a href="/" type="submit" >Return to Home Page</a>
-              </div>
-              <div class="col-md-6" style="text-align: right;">
-                <a href="/requestsVisual" type="submit" >PPE Requests Map</a>
+        <div class="row">
+          <div class="col-md-1-5 d-flex align-items-center justify-content-center">
+            <input type="hidden" name="confirmClaims"></input>
+            <div>
+              <div class=" container-xs center clearfix">
+                <button type="submit" class=" btn-xs btn-default  btn-flat-solid">Confirm Claims</button>
               </div>
             </div>
-            <h5>Requests are sorted by distance from your address</h5>
-
-                {% for requestObj in allRequests %}
-               <hr style="border-top: 1px solid rgb(206, 202, 202) !important;">
-
-          <h3 class=" color-dark" style="margin-bottom:15px;">Request For {{ requestObj.numPPE }} <span id="type{{ requestObj.id }}"></span> </h3>
-
-          <div class="col-md-6">
-            <p><span class="color-dark">Requester's Name: </span>{{ requestObj.fName }} {{ requestObj.lName }}</p>
-            <p><span class="color-dark">Requester's Email: </span>{{ requestObj }}</p>
-            <p><span class="color-dark">Requester's Organization: </span>{{ requestObj.organization }}</p>
-            <p><span class="color-dark">Request Details: </span>{{ requestObj.numPPE }}x <span id="type2{{ requestObj.id }}"></span></p>
           </div>
-          <div class="col-md-6 divStopOverflow">
-            <p><span class="color-dark">Request Posted On: </span>{{ requestObj.orderDate }}</p>
-            <p><span class="color-dark">PPE Ideal "Deliver By" Date:</span> {{ requestObj.delivDate }}</p>
-            <p><span class="color-dark">Approximate Delivery Location: </span>{{ requestObj.city }}, {{ requestObj.state }}, {{ requestObj.zipCode }}, {{ requestObj.country }}</p>
-            <p style="margin-top:-2%; font-size:80%;">Exact location will be released to claimant</p>
-            <p><span class="color-dark">Other Notes For The Donor: </span>{{ requestObj.notes }}</p>
-            <br />
-          </div>
-
-          <form action"confirmation" style="padding-bottom:1em;" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="requestObjId" value="{{ requestObj.id }}"></input>
-            <button style="margin-top:-20px; padding-top:-20px;" type="submit" class="btn-xs btn-default  btn-flat-solid">Claim AND/OR More Details</button>
-          </form>
-
-
-          <script>
-           var typeShort = '{{ requestObj.typePPE }}'
-           console.log(typeShort)
-           var typeLong = ""
-           switch(typeShort) {
-             case "shield": typeLong="3D Printed Face Shields (printforthecure.com/catalogue-shield)"; break;
-             case "strap": typeLong="Face Mask Comfort Straps (printforthecure.com/catalogue-maskstrap)"; break;
-             case "handle": typeLong="Touch-less Door Handles; " + '{{ requestObj.typeHandle }}' + " (printforthecure.com/catalogue-handle)"; break;
-             case "opener": typeLong="Personal Touchless Door Openers (printforthecure.com/catalogue-dooropener)"; break;
-             default: typeLong="PPE type not found"; break;
-           }
-           document.getElementById("type{{ requestObj.id }}").innerText = typeLong;
-           document.getElementById("type2{{ requestObj.id }}").innerText = typeLong;
-          </script>
-          {% endfor %}
-
-          </div>
+          <div class="col-md-10-5 clearfix">
+            <h1 style="padding-top: 3%;" class="text-uppercase color-dark"> Requests Nearest To You</h1>
+              <div class="row">
+                <div class="col-md-6">
+                  <a href="/" type="submit" >Return to Home Page</a>
+                </div>
+                <div class="col-md-6" style="text-align: right;">
+                  <a href="/requestsVisual" type="submit" style="padding-right:8%;">PPE Requests Map</a>
+                </div>
+              </div>
+              <h5>Requests are sorted by distance from your address</h5>
           </div>
         </div>
+
+        <div class="col-12">
+        {% for requestObj in allRequests %}
+          <div class="row">
+            <div class="col-md-1-5 d-flex align-items-center justify-content-center" style="text-align: center;">
+              <div class="form-group d-flex align-items-center">
+                <label class="color-dark" style="font-size:150%" for="checkBox{{ requestObj.id }}">Claim?<br>
+                  <input type="checkbox" id="checkBox{{ requestObj.id }}" name="checkBox{{ requestObj.id }}" value="true" style="display: inline-block; width:20px; height:20px;">
+                </label>
+              </div>
+            </div>
+            <div class="col-md-10-5">
+              <hr style="border-top: 1px solid rgb(100, 100, 100) !important; margin-right:5%;">
+              <h3 class=" color-dark" style="margin-bottom:15px;">Request For {{ requestObj.numPPE }} <span id="type{{ requestObj.id }}"></span> </h3>
+
+              <div class="col-md-6">
+                <p><span class="color-dark">Requester's Name: </span>{{ requestObj.fName }} {{ requestObj.lName }}</p>
+                <p><span class="color-dark">Requester's Email: </span>{{ requestObj }}</p>
+                <p><span class="color-dark">Requester's Organization: </span>{{ requestObj.organization }}</p>
+                <p><span class="color-dark">Request Details: </span>{{ requestObj.numPPE }}x <span id="type2{{ requestObj.id }}"></span></p>
+              </div>
+              <div class="col-md-6 divStopOverflow">W
+                <p><span class="color-dark">Request Posted On: </span>{{ requestObj.orderDate }}</p>
+                <p><span class="color-dark">PPE Ideal "Deliver By" Date:</span> {{ requestObj.delivDate }}</p>
+                <p style="margin-right:5%;"><span class="color-dark">Approximate Delivery Location: </span>{{ requestObj.city }}, {{ requestObj.state }}, {{ requestObj.zipCode }}, {{ requestObj.country }}</p>
+                <p style="margin-top:-2%; font-size:80%;">Exact location will be released to claimant</p>
+                <p style="margin-right:5%;"><span class="color-dark">Other Notes For The Donor: </span>{{ requestObj.notes }}</p>
+                <br />
+              </div>
+
+              <!-- <form action"confirmation" style="padding-bottom:1em;" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="requestObjId" value="{{ requestObj.id }}"></input>
+                <button style="margin-top:-20px; padding-top:-20px;" type="submit" class="btn-xs btn-default  btn-flat-solid">Claim This Request</button>
+              </form> -->
+
+              <script>
+               var typeShort = '{{ requestObj.typePPE }}'
+               console.log(typeShort)
+               var typeLong = ""
+               switch(typeShort) {
+                 case "shield": typeLong="3D Printed Face Shields (printforthecure.com/catalogue-shield)"; break;
+                 case "strap": typeLong="Face Mask Comfort Straps (printforthecure.com/catalogue-maskstrap)"; break;
+                 case "handle": typeLong="Touch-less Door Handles; " + '{{ requestObj.typeHandle }}' + " (printforthecure.com/catalogue-handle)"; break;
+                 case "opener": typeLong="Personal Touchless Door Openers (printforthecure.com/catalogue-dooropener)"; break;
+                 default: typeLong="PPE type not found"; break;
+               }
+               document.getElementById("type{{ requestObj.id }}").innerText = typeLong;
+               document.getElementById("type2{{ requestObj.id }}").innerText = typeLong;
+              </script>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+        </form>
+        </div>
+      </div>
+    </div>
 
 
 
