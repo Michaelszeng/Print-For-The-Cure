@@ -210,6 +210,7 @@
         word-wrap: break-word;
       }
       .col-md-1-5 { width: 12.5%; }
+      .col-md-1-8 { width: 15%; }
       .col-md-2-5 { width: 20.83333%; }
       .col-md-3-5 { width: 29.16667%; }
       .col-md-4-5 { width: 37.5%; }
@@ -218,6 +219,7 @@
       .col-md-7-5 { width: 62.5%; }
       .col-md-8-5 { width: 70.83333%; }
       .col-md-9-5 { width: 79.16667%; }
+      .col-md-10-2 { width: 85%; }
       .col-md-10-5 { width: 87.5%; }
       .col-md-11-5 { width: 95.8333%; }
     </style>
@@ -264,15 +266,15 @@
     <div class="wrapper bg">
       <div class="block-page" >
         <div class="row">
-          <div class="col-md-1-5 d-flex align-items-center justify-content-center">
+          <div class="col-md-1-8 col-xs-12 d-flex align-items-center justify-content-center">
             <input type="hidden" name="confirmClaims"></input>
             <div>
               <div class=" container-xs center clearfix">
-                <button type="submit" class=" btn-xs btn-default  btn-flat-solid">Confirm Claims</button>
+                <button type="submit" class=" btn-xs btn-default  btn-flat-solid" style="width: 190%; font-size: 150%; padding: -25%; margin-left: -25%; margin-right: -75%;">Confirm Claims</button>
               </div>
             </div>
           </div>
-          <div class="col-md-10-5 clearfix">
+          <div class="col-md-10-2 col-xs-12 clearfix">
             <h1 style="padding-top: 3%;" class="text-uppercase color-dark"> Requests Nearest To You</h1>
               <div class="row">
                 <div class="col-md-6">
@@ -306,7 +308,7 @@
                 <p><span class="color-dark">Requester's Organization: </span>{{ requestObj.organization }}</p>
                 <p><span class="color-dark">Request Details: </span>{{ requestObj.numPPE }}x <span id="type2{{ requestObj.id }}"></span></p>
               </div>
-              <div class="col-md-6 divStopOverflow">W
+              <div class="col-md-6 divStopOverflow">
                 <p><span class="color-dark">Request Posted On: </span>{{ requestObj.orderDate }}</p>
                 <p><span class="color-dark">PPE Ideal "Deliver By" Date:</span> {{ requestObj.delivDate }}</p>
                 <p style="margin-right:5%;"><span class="color-dark">Approximate Delivery Location: </span>{{ requestObj.city }}, {{ requestObj.state }}, {{ requestObj.zipCode }}, {{ requestObj.country }}</p>
