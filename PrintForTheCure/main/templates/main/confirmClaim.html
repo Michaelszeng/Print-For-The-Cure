@@ -116,14 +116,15 @@
             <input type="hidden" name="no"></input>
             <button type="submit" class="btn-md btn-default  btn-flat-solid" style="width: 25%; font-size : 200%;">No</button>
           </form>
+          <p>Note: Pressing 'No' may revert checked requests</p>
 
           <br /><br />
           <ol>
           {% for requestObj in requestObjs %}
             <li style="font-size:150%;"><span id="reqSummary{{ requestObj.id }}" style="font-size:200%;" class="color-dark"> {{ requestObj.numPPE }}x </span></li>
 
-            <button type="button" class="collapsible">Request Details</button>
-            <div style="display: none; background-color: #eee; word-wrap: break-word;">
+            <button type="button"  onclick="collapse({{ requestObj.id }})" class="collapsible">Request Details</button>
+            <div id="collapseBtn{{ requestObj.id }}" style="display: none; background-color: #eee; word-wrap: break-word;">
               <p style="padding-left: 3%; padding-top:1%;"><span class="color-dark">Requester's Name:</span> {{ requestObj.fName }} {{ requestObj.lName }}</p>
               <p style="padding-left: 3%;"><span class="color-dark">Requester's Email:</span> {{ requestObj.email }}</p>
               <p style="padding-left: 3%;"><span class="color-dark">Requester's Approximate Address:</span> {{ requestObj.city }} {{ requestObj.state }} {{ requestObj.zipCode }} {{ requestObj.country }}</p>
@@ -140,16 +141,25 @@
               var coll = document.getElementsByClassName("collapsible");
               var i;
 
-              for (i = 0; i < coll.length; i++) {
+              for (i = 0; i < coll.length; i+=1) {
                 coll[i].addEventListener("click", function() {
                   this.classList.toggle("active");
                   var content = this.nextElementSibling;
-                  if (content.style.display === "block") {
-                    content.style.display = "none";
-                  } else {
-                    content.style.display = "block";
-                  }
+                  // if (content.style.display == "block") {
+                  //   content.style.display = "none";
+                  // } else {
+                  //   content.style.display = "block";
+                  // }
                 });
+              }
+
+              function collapse(id) {
+                var displayStyle = document.getElementById("collapseBtn" + id).style.display
+                if (displayStyle == "block") {
+                  document.getElementById("collapseBtn" + id).style.display = "none";
+                } else {
+                  document.getElementById("collapseBtn" + id).style.display = "block";
+                }
               }
 
 
