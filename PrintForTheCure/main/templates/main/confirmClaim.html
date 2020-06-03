@@ -104,8 +104,13 @@
             <!-- I use the hidden input element to send along the information that
               we are logging out. -->
             <input type="hidden" name="yes"></input>
-            <button type="submit" class="btn-md btn-default  btn-flat-solid" style="width: 25%; font-size : 200%;">Yes</button>
+            <button id="yes" onclick="loading()" type="submit" class="btn-md btn-default  btn-flat-solid" style="width: 25%; font-size : 200%;">Yes</button>
           </form>
+          <script>
+            function loading() {
+              document.getElementById("yes").innerHTML = "Loading ..."
+            }
+          </script>
 
           <!--You can only change the form style and button class, everything else in the form has to stay the same-->
           <form style="padding-bottom:1em; display: inline;" method="POST">
@@ -121,9 +126,9 @@
           <br /><br />
           <ol>
           {% for requestObj in requestObjs %}
-            <li style="font-size:150%;"><span id="reqSummary{{ requestObj.id }}" style="font-size:200%;" class="color-dark"> {{ requestObj.numPPE }}x </span></li>
+            <li style="font-size:150%;"><span id="reqSummary{{ requestObj.id }}" style="font-size:175%;" class="color-dark"> {{ requestObj.numPPE }}x </span></li>
 
-            <button type="button"  onclick="collapse({{ requestObj.id }})" class="collapsible">Request Details</button>
+            <button type="button"  onclick="collapse({{ requestObj.id }})" class="collapsible">More Details</button>
             <div id="collapseBtn{{ requestObj.id }}" style="display: none; background-color: #eee; word-wrap: break-word;">
               <p style="padding-left: 3%; padding-top:1%;"><span class="color-dark">Requester's Name:</span> {{ requestObj.fName }} {{ requestObj.lName }}</p>
               <p style="padding-left: 3%;"><span class="color-dark">Requester's Email:</span> {{ requestObj.email }}</p>
@@ -131,8 +136,6 @@
               <p style="padding-left: 3%;"><span class="color-dark">Requester's Approximate Address:</span> {{ requestObj.city }} {{ requestObj.state }} {{ requestObj.zipCode }} {{ requestObj.country }}</p>
               <p style="font-size:80%; padding-left: 3%;">The claimant will receive the full address for delivery</p>
               <br />
-              <p style="padding-left: 3%;"><span class="color-dark">Type of PPE Requested:</span> <span id="type"></span></p>
-              <p style="padding-left: 3%;"><span class="color-dark">Amount of PPE Requested:</span> {{ requestObj.numPPE }}</p>
               <p style="padding-left: 3%;"><span class="color-dark">Ideal "Deliver By" Date for requested PPE:</span> {{ requestObj.delivDate }}</p>
               <br />
               <p style="padding-left: 3%; padding-bottom:1%; padding-right:3%;"><span class="color-dark">Other Notes For the Patron:</span> {{ requestObj.notes }}</p>
@@ -166,15 +169,6 @@
 
              var typeShort = '{{ requestObj.typePPE }}'
              console.log(typeShort)
-             var typeLong = ""
-             switch(typeShort) {
-               case "shield": typeLong="3D Printed Face Shields (printforthecure.com/catalogue-shield)"; break;
-               case "strap": typeLong="Face Mask Comfort Straps (printforthecure.com/catalogue-maskstrap)"; break;
-               case "handle": typeLong="Touch-less Door Handles; " + '{{ requestObj.typeHandle }}' + " (printforthecure.com/catalogue-handle)"; break;
-               case "opener": typeLong="Personal Touchless Door Openers (printforthecure.com/catalogue-dooropener)"; break;
-               default: typeLong="PPE type not found"; break;
-             }
-
              var typeWithNum
              switch(typeShort) {
                case "shield": typeWithNum="{{ requestObj.numPPE }}" + "x Face Shields"; break;
@@ -184,7 +178,6 @@
                default: typeWithNum="PPE amount and type not found"; break;
              }
              document.getElementById("reqSummary{{ requestObj.id }}").innerText = typeWithNum;
-             document.getElementById("type").innerText = typeLong;
             </script>
           {% endfor %}
         </div>

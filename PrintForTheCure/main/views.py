@@ -41,7 +41,7 @@ def home(request):
 
 
         if requestModel.status == 2:
-            if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=10):
+            if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=15):
                 print("request Expired. Delivery Date: " + str(requestModel.delivDate) + "   Current Date: " + str(timezone.now().date()))
                 try:    #ensure fake emails don't crash website
                     service = getService()
@@ -337,7 +337,7 @@ def map(request):
         if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=1) and requestModel.status == 0:
             print("Deleting RequestModel (date passed): " + str(requestModel.delivDate))
             requestModel.status = 1
-            requestModel.save()
+            # requestModel.save()
 
             service = getService()
             subject = "Request For PPE Expired"
@@ -393,11 +393,13 @@ def take_first(elem):
 
 def nearbyRequests(request):
     # print(request.user.is_authenticated)
-    for requestModel in RequestModel.objects.all():
-        if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=1) and requestModel.status == 0:
-            print("Deleting RequestModel (date passed): " + str(requestModel.delivDate))
-            requestModel.status = 1
-            requestModel.save()
+
+    #MAKES REQUESTS EXPIRE, BUT UNECESSARY FOR IT TO BE IN THIS FUNCTION
+    # for requestModel in RequestModel.objects.all():
+    #     if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=1) and requestModel.status == 0:
+    #         print("Deleting RequestModel (date passed): " + str(requestModel.delivDate))
+    #         requestModel.status = 1
+    #         requestModel.save()
 
             # service = getService()
             # subject = "Request For PPE Expired"
