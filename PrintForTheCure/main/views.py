@@ -334,7 +334,7 @@ def map(request):
     addresses = []
     counter = 0
     for requestModel in RequestModel.objects.all():
-        if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=1) and requestModel.status == 0:
+        if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=2) and requestModel.status == 0:
             print("Deleting RequestModel (date passed): " + str(requestModel.delivDate))
             requestModel.status = 1
             # requestModel.save()
