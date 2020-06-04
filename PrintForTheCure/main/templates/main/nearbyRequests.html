@@ -287,6 +287,7 @@
               <h5>Requests are sorted by distance from your address</h5>
           </div>
         </div>
+        <hr style="border-top: 1px solid rgb(100, 100, 100) !important; margin-right:5%;">
 
         <div class="col-12">
         {% for requestObj in allRequests %}
@@ -299,7 +300,6 @@
               </div>
             </div>
             <div class="col-md-10-5">
-              <hr style="border-top: 1px solid rgb(100, 100, 100) !important; margin-right:5%;">
               <h3 class=" color-dark" style="margin-bottom:15px;">Request For {{ requestObj.numPPE }} <span id="type{{ requestObj.id }}"></span> </h3>
 
               <div class="col-md-6">
@@ -339,6 +339,7 @@
               </script>
             </div>
           </div>
+          <hr style="border-top: 1px solid rgb(100, 100, 100) !important; margin-right:5%;">
         {% endfor %}
         </div>
         </form>
