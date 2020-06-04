@@ -357,11 +357,15 @@
                 <option value="handle">Hands-free Door Handles</option>
                 <option value="opener">Personal Hands-free Door Openers</option>
               </select>
+              <p id="openerMsg">Note: Door openers may only work on handles which require little force to open.</p>
             </div>
+            <script>
+              document.getElementById("openerMsg").style.display = "none";
+            </script>
 
             <div class="white-space-20"></div>
             <div id="typeHandle" class="form-group">
-              <label for="typePPE">Door Handle Type <a style="font-size:70%; padding-top: -12px; margin-bottom: -2px" type="submit" href="/catalogue-handle/">(Which Type Do You Need?)</a>:</label><br />
+              <label for="typeHandle">Door Handle Type <a style="font-size:70%; padding-top: -12px; margin-bottom: -2px" type="submit" href="/catalogue-handle/">(Which Type Do You Need?)</a>:</label><br />
               <a style="padding-top: -12px; margin-bottom: -2px" type="submit" href="/catalogue-handle/">More Info About Hands-free Door Handles</a>
               <select class="form-control form-flat" name="typeHandle">
                 <option value="" selected disabled>----select----</option>
@@ -391,6 +395,13 @@
                 }
                 else {
                   document.getElementById("typeHandle").style.display = "none";
+                }
+
+                if (type == "opener") {
+                  document.getElementById("openerMsg").style.display = "block";
+                }
+                else {
+                  document.getElementById("openerMsg").style.display = "none";
                 }
 
 
