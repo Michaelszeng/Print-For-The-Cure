@@ -337,7 +337,7 @@ def map(request):
         if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=2) and requestModel.status == 0:
             print("Deleting RequestModel (date passed): " + str(requestModel.delivDate))
             requestModel.status = 1
-            # requestModel.save()
+            requestModel.save()
 
             service = getService()
             subject = "Request For PPE Expired"
