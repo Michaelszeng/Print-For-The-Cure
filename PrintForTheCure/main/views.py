@@ -89,16 +89,16 @@ def home(request):
 
 
     #GEOCODES 0.0,0.0 REQUESTS, ONLY RUN THIS ONCE THIS COMMENT OUT THE BELOW CODE
-    for requestModel in RequestModel.objects.all():
-        print(requestModel.lat)
-        if requestModel.lat-0.0 < 0.1 and requestModel.lng-0.0 < 0.1:   #don't use ==0 since double comparisions are bad
-            address = requestModel.address
-            url = ('https://maps.googleapis.com/maps/api/geocode/json' + '?address={}' + '&key={}').format(urllib.parse.quote(address, safe=""), key)
-            response = urllib.request.urlopen(url)
-            responseJSON = json.loads(response.read())
-            requestModel.lat = responseJSON.get("results")[0].get("geometry").get("location").get("lat")
-            requestModel.lng = responseJSON.get("results")[0].get("geometry").get("location").get("lng")
-            requestModel.save()
+    # for requestModel in RequestModel.objects.all():
+    #     print(requestModel.lat)
+    #     if requestModel.lat-0.0 < 0.1 and requestModel.lng-0.0 < 0.1:   #don't use ==0 since double comparisions are bad
+    #         address = requestModel.address
+    #         url = ('https://maps.googleapis.com/maps/api/geocode/json' + '?address={}' + '&key={}').format(urllib.parse.quote(address, safe=""), key)
+    #         response = urllib.request.urlopen(url)
+    #         responseJSON = json.loads(response.read())
+    #         requestModel.lat = responseJSON.get("results")[0].get("geometry").get("location").get("lat")
+    #         requestModel.lng = responseJSON.get("results")[0].get("geometry").get("location").get("lng")
+    #         requestModel.save()
     #END GEOCODING
 
 
