@@ -31,7 +31,7 @@ import numpy as geek
 
 # Create your views here.
 def home(request):
-    print(getCurrentRequestedShields)
+    print("Shields Being Requested: " + str(getCurrentRequestedShields(request)))
     claimRate = getClaimRate(request)
 
     claimedPPE = 0
@@ -869,7 +869,7 @@ def getCurrentRequestedShields(request):
     result = 0
     for requestModel in RequestModel.objects.all():
         if requestModel.status == 0:
-            if requestModel.type == "shield":
+            if requestModel.typePPE == "shield":
                 result += requestModel.numPPE
 
     return result
