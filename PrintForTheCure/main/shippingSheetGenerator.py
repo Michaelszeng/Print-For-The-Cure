@@ -1,11 +1,11 @@
 import xlwt
 from xlwt import Workbook
-from ShippingInfo_6_4_20 import *   #change depending on shipping day
+from ShippingInfo_6_13_20 import *   #change depending on shipping day
 
 workbookBox = Workbook()
 workbookBag = Workbook()
-sheetBox = workbookBox.add_sheet('6.7.20')
-sheetBag = workbookBag.add_sheet('6.7.20')
+sheetBox = workbookBox.add_sheet('6.13.20')
+sheetBag = workbookBag.add_sheet('6.13.20')
 style = xlwt.easyxf('font: bold 1')
 
 # row, column
@@ -27,6 +27,36 @@ sheetBag.write(0, 5, 'Type PPE', style)
 sheetBag.write(0, 6, 'Amount', style)
 sheetBag.write(0, 7, 'Email', style)
 style = xlwt.easyxf('font: bold off')
+
+#finds index of first address so next loop doesn't go out of bounds
+addressIndex = 0
+for i in range(len(data1)-22):
+    addressSearcher = data1[i:i+21]
+    if addressSearcher == "Requester's Address: ":
+        addressIndex = i
+        break
+
+
+data = data1.replace("\n", "")
+
+#loops backwards up to the first address (found in prev loop) so it doesn't go out of bounds
+# for i in reversed(range(len(data) - addressIndex)):
+#     addressSearcher = data[i:i+21]
+#     if addressSearcher == "Requester's Address: ":
+#         iCounterStartValue = i
+#         iCounter = i
+#         while True:
+#             #name ends when the next 19 chars are "Type of PPE Requested: "
+#             if "Type of PPE Requested: " in data[21+iCounter:21+iCounter+23] or iCounter-iCounterStartValue > 80:   #max address length = 80
+#                 break
+#             if data[i:i+2] == "\\n":
+#                 print("hello")
+#                 dataHalfOne = data[0:i]
+#                 dataHalfTwo = data[i+2:]
+#                 data = dataHalfOne + "  " + dataHalfTwo
+#             iCounter += 1
+
+# print(data)
 
 currentRow = 1
 for i in range(len(data)-22):
@@ -98,7 +128,7 @@ for i in range(len(data)-22):
         print(addressList)
         zip = addressList[len(addressList)-2]
         state = addressList[len(addressList)-3]
-        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza"]
+        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor"]
         if len(addressList[len(addressList)-5]) <= 2 and addressList[len(addressList)-5].lower() != "of":   #if it is likely an apt/suite number
             city = addressList[len(addressList)-4]
             separator = " "
