@@ -43,7 +43,7 @@ def home(request):
 
         if requestModel.status == 2:
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=15):
-                print("request Expired. Delivery Date: " + str(requestModel.delivDate) + "   Current Date: " + str(timezone.now().date()))
+
                 try:    #ensure fake emails don't crash website
                     service = getService()
                     subject = "PPE Delivery Successful?"
@@ -288,11 +288,11 @@ def doctorRequest(request):
             print("Address Validation Succeeded")
 
             if request.POST['typePPE'] == "handle":
-                newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'], phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle=request.POST['typeHandle'], address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
+                newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'].replace(" ", ""), phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle=request.POST['typeHandle'], address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
                 print(request.POST['lat'] + ", " + request.POST['lng'])
                 newRequest.save()
             else:
-                newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'], phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle="", address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
+                newRequest = RequestModel(id=RequestModel.objects.latest('orderDate').id + random.randrange(1, 100, 1), status=0, fName=request.POST['fName'], lName=request.POST['lName'], email=request.POST['email'].replace(" ", ""), phone=request.POST['phone'], organization=request.POST['organization'], numPPE=request.POST['numPPE'], typePPE=request.POST['typePPE'], typeHandle="", address=request.POST['address'], city=request.POST['city'], state=request.POST['state'], country=request.POST['country'], lat=request.POST['lat'], lng=request.POST['lng'], zipCode=request.POST['zipCode'], delivDate=datetime.date(int(request.POST['year']), int(request.POST['month']), int(request.POST['day'])) , orderDate=timezone.now(), notes=request.POST['otherNotes'])
                 print(request.POST['lat'] + ", " + request.POST['lng'])
                 newRequest.save()
 
@@ -608,14 +608,20 @@ def confirmClaim(request):
                     ppeType = "Personal Touchless Door Opener"
                 message_text = "Thank You For Claiming a request for PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date for the requested PPE: %s\n\nOther Notes From the Requester: %s\n\nDelivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. \n\nThank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )\nIf you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
                 message = makeMessage("printforthecure@gmail.com", request.user.email, subject, message_text)
-                sendMessage(service, 'me', message)
+                try:
+                    sendMessage(service, 'me', message)
+                except:
+                    print("message failed to send")
 
                 #Doctor Email
                 donor = Donor.objects.get(user = request.user)
                 subject = "Request For PPE Claimed"
                 message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
                 message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text1)
-                sendMessage(service, 'me', message)
+                try:
+                    sendMessage(service, 'me', message)
+                except:
+                    print("message failed to send")
 
                 requestObj.status = 2
                 requestObj.save()
@@ -858,11 +864,11 @@ def getClaimRate(request):
 
     claimRate = claimedRequests/totalRequests
 
-
+    print("claimed requests: " + str(claimedRequests))
+    print("total requests claimed and expired: " + str(totalRequests))
     print("Claimrate (not including pending requests): " + str(claimRate))
     claimRate = int(claimRate * 100)
     claimRateStr = str(claimRate)
-    print(claimRateStr)
     return claimRateStr
 
 def getCurrentRequestedShields(request):
