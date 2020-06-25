@@ -1,11 +1,11 @@
 import xlwt
 from xlwt import Workbook
-from ShippingInfo_6_13_20 import *   #change depending on shipping day
+from ShippingInfo_6_20_20 import *   #change depending on shipping day
 
 workbookBox = Workbook()
 workbookBag = Workbook()
-sheetBox = workbookBox.add_sheet('6.13.20')
-sheetBag = workbookBag.add_sheet('6.13.20')
+sheetBox = workbookBox.add_sheet('6.20.20')
+sheetBag = workbookBag.add_sheet('6.20.20')
 style = xlwt.easyxf('font: bold 1')
 
 # row, column
@@ -37,7 +37,7 @@ for i in range(len(data1)-22):
         break
 
 
-data = data1.replace("\n", "")
+data = data1.replace("\n", " ").replace("\r", " ")
 
 #loops backwards up to the first address (found in prev loop) so it doesn't go out of bounds
 # for i in reversed(range(len(data) - addressIndex)):
@@ -125,10 +125,10 @@ for i in range(len(data)-22):
             if found == False or safetyCounter > 5:
                 break
             safetyCounter += 1
-        print(addressList)
+        # print(addressList)
         zip = addressList[len(addressList)-2]
         state = addressList[len(addressList)-3]
-        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor"]
+        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "terrace", "trrc", "trail", "trl", "crossing", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor"]
         if len(addressList[len(addressList)-5]) <= 2 and addressList[len(addressList)-5].lower() != "of":   #if it is likely an apt/suite number
             city = addressList[len(addressList)-4]
             separator = " "
@@ -189,13 +189,15 @@ for i in range(len(data)-22):
         if "3D Printed Face Shields" in type2:
             packageType = "Box"
         elif "Personal Touchless Door Opener" in type2:
-            if num > 3:
+            if num > 8:
                 packageType = "Box"
             else:
                 packageType = "Bag"
         elif "Face Mask Comfort Strap" in type2:
             if num > 125:
                 packageType = "Box"
+            elif num < 10:
+                packageType = "env"
             else:
                 packageType = "Bag"
         elif "Touch-less Door Handle" in type2:
@@ -223,6 +225,8 @@ for i in range(len(data)-22):
             sheetBag.write(currentRow, 2, city.replace(',', ''), style)
             sheetBag.write(currentRow, 1, address.replace(',', ''), style)
             sheetBag.write(currentRow, 0, name2, style)
+        elif packageType == "env":
+            print(email2)
         currentRow += 1
 
 

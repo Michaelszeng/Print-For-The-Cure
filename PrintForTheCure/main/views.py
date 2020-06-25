@@ -31,7 +31,32 @@ import numpy as geek
 
 # Create your views here.
 def home(request):
-    print("Shields Being Requested: " + str(getCurrentRequestedShields(request)))
+    #temporary: to recover the 300 shields request that expired
+    for requestModel in RequestModel.objects.all():
+        if requestModel.numPPE == 300:
+            print(requestModel.email)
+            requestModel.status = 0
+            requestModel.save()
+
+    # print("Shields Being Requested: " + str(getCurrentRequestedShields(request)))
+    # active = 0
+    # expired = 0
+    # claimed = 0
+    # msged = 0
+    # for requestModel in RequestModel.objects.all():
+    #     if requestModel.status == 0:
+    #         active += 1
+    #     elif requestModel.status == 1:
+    #         expired += 1
+    #     elif requestModel.status == 2:
+    #         claimed += 1
+    #     elif requestModel.status == 3:
+    #         msged += 1
+    # print("Total active requests: " + str(active))
+    # print("Total expired requests: " + str(expired))
+    # print("Total claimed requests: " + str(claimed))
+    # print("Total claimed and messaged requests: " + str(msged))
+
     claimRate = getClaimRate(request)
 
     claimedPPE = 0
@@ -859,6 +884,9 @@ def getClaimRate(request):
         if requestModel.status == 1:
             totalRequests += 1
         if requestModel.status == 2:
+            claimedRequests += 1
+            totalRequests += 1
+        if requestModel.status == 3:
             claimedRequests += 1
             totalRequests += 1
 
