@@ -55,15 +55,9 @@
 
     <hr>
 
-    <!--You can only change the form style and button class, everything else below has to stay the same-->
-    <form style="padding-bottom:1em;" method="POST">
-      <!-- Every <form> element needs a csrf_token as a security precaution. -->
-      {% csrf_token %}
-      <!-- I use the hidden input element to send along the information that
-        we are logging out. -->
-      <input type="hidden" name="return"></input>
-      <button href="/" type="submit" class=" btn-xs btn-default  btn-flat-solid">Go Back</button>
-    </form>
+
+
+    <a href="/" class="btn btn-lg btn-primary btn-flat-solid btn-pill margin-top-25">Return Home</a>
 
     </div>
     </div>

@@ -270,7 +270,10 @@
             <input type="hidden" name="confirmClaims"></input>
             <div>
               <div class=" container-xs center clearfix">
-                <button type="submit" class=" btn-xs btn-default  btn-flat-solid" style="width: 190%; font-size: 150%; padding: -25%; margin-left: -25%; margin-right: -75%;">Confirm Claims</button>
+                <div class="form-group">
+                  <input type="hidden" name="confirmClaims"></input>
+                  <button type="submit" class=" btn-xs btn-default  btn-flat-solid" style="width: 190%; font-size: 150%; padding: -25%; margin-left: -25%; margin-right: -75%;">Confirm Claims</button>
+                </div>
               </div>
             </div>
           </div>
@@ -284,7 +287,32 @@
                   <a href="/requestsVisual" type="submit" style="padding-right:8%;">PPE Requests Map</a>
                 </div>
               </div>
-              <h5>Requests are sorted by distance from your address</h5>
+              <div class="form-group">
+                <label for="sortBy" class="col-7;" style="font-size: 200%; margin-bottom:-1em; margin-top: 1em;">Requests Are Sorted By: </label>
+                <select id="sortBy" name="sortBy" class="form-control form-flat col-5">
+                  <option id="trueSortBy" value="{{ sortBy }}">{{ sortBy }}</option>
+                  <option id="falseSortBy" value="{{ sortedNotBy }}">{{ sortedNotBy }}</option>
+                </select>
+                <input type="hidden" name="sort"></input>
+                <button type="submit" id="sortButton" onclick="reload" class="btn-xs btn-default  btn-flat-solid">Apply Changes</button>
+                <script>
+                  if ("{{ sortBy }}".localeCompare("delivDate") == 0) {
+                    console.log("delivDate")
+                    document.getElementById("trueSortBy").innerHTML = "Most Immediate Ideal Delivery Date";
+                    document.getElementById("falseSortBy").innerHTML = "Distance";
+                  }
+                  else {
+                    console.log("distance")
+                    document.getElementById("trueSortBy").innerHTML = "Distance";
+                    document.getElementById("falseSortBy").innerHTML = "Most Immediate Ideal Delivery Date";
+                  }
+
+                  function reload() {
+                    document.getElementById("sortButton").innerHTML = "Reloading...";
+                  }
+                </script>
+              </div>
+              <!-- <h5>Requests are sorted by distance from your address</h5> -->
           </div>
         </div>
         <hr style="border-top: 1px solid rgb(100, 100, 100) !important; margin-left: 1%;margin-right:5%;">

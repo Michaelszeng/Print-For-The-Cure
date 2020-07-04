@@ -455,35 +455,120 @@ def take_first(elem):
     return elem[0]
 
 def nearbyRequests(request):
-    # print(request.user.is_authenticated)
-
-    #MAKES REQUESTS EXPIRE, BUT UNECESSARY FOR IT TO BE IN THIS FUNCTION
-    # for requestModel in RequestModel.objects.all():
-    #     if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=1) and requestModel.status == 0:
-    #         print("Deleting RequestModel (date passed): " + str(requestModel.delivDate))
-    #         requestModel.status = 1
-    #         requestModel.save()
-
-            # service = getService()
-            # subject = "Request For PPE Expired"
-            # ppeType = ""
-            # if "shield" in requestModel.typePPE:
-            #     ppeType = "3D Printed Face Shields"
-            # elif "strap" in requestModel.typePPE:
-            #     ppeType = "Face Mask Comfort Strap"
-            # elif "handle" in requestModel.typePPE:
-            #     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestModel.typeHandle
-            # elif "opener" in requestModel.typePPE:
-            #     ppeType = "Personal Touchless Door Opener"
-            # message_text = "We are sorry to notify you that your request for PPE has expired without being claimed. Your request Details:\n\n\nRequester's Name: %s %s\nRequester's Email: %s\nPPE Delivery Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nIdeal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nAs the website is just launching, we are gathering more donors to help ensure our essential workers can get the PPE they need. Please request again on https://printforthecure.com and we will do our best to help you next time. Thank you for your understading.\n\nPlease contact us at printforthecure@gmail.com with any questions." % (requestModel.fName, requestModel.lName, requestModel.email, requestModel.address, requestModel.city, requestModel.state, requestModel.zipCode, requestModel.country, ppeType, requestModel.numPPE, requestModel.delivDate, requestModel.notes)
-            # message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
-            # sendMessage(service, 'me', message)
-
     if not request.user.is_authenticated:
         return HttpResponseRedirect("/notLoggedIn/")
+
+    allUnclaimedRequests = []
+    sortBy = "delivDate"
     if request.method == 'POST':
         if request.user.is_authenticated:
-            if 'confirmClaims' in request.POST.keys():
+            if 'sortBy' in request.POST.keys():
+                print(request.POST['sortBy'])
+                if request.POST['sortBy'] == 'delivDate':
+                    sortBy = "delivDate"
+                    print("---date")
+                    #Below uses date to sort the list of requests from most urgent to least
+                    allDateNumbers = []
+                    for requestModel in RequestModel.objects.all():
+                        if requestModel.status == 0:
+                            allUnclaimedRequests.append(requestModel)
+                            print(10000*requestModel.delivDate.year + 100*requestModel.delivDate.month + requestModel.delivDate.day)
+                            allDateNumbers.append(10000*requestModel.delivDate.year + 100*requestModel.delivDate.month + requestModel.delivDate.day)
+
+                    keydict = dict(zip(allUnclaimedRequests, allDateNumbers))
+                    allUnclaimedRequests.sort(key=keydict.get)
+                    print(allUnclaimedRequests)
+                elif request.POST['sortBy'] == 'distance':
+                    sortBy = "distance"
+                    print("---distance")
+                    #Below uses Google's Distance Matrix API to sort the list of requests from nearest to furthest
+                    donor = Donor.objects.get(user = request.user)
+                    print(vars(donor))
+
+                    addressList = donor.address.split()
+                    addressFormatted = ""
+                    for word in addressList:
+                        addressFormatted += word
+                        addressFormatted += "+"
+
+                    cityList = donor.city.split()
+                    cityFormatted = ""
+                    for word in cityList:
+                        addressFormatted += word
+                        addressFormatted += "+"
+
+                    origin = addressFormatted + cityFormatted + donor.state + "+" + donor.zipCode
+                    print(origin)
+
+                    destination = []
+                    allDistances = []
+                    numDestinations = 1
+                    numApiCalls = 1
+                    for requestModel in RequestModel.objects.all():
+                        # print("mod result" + str(geek.mod(numDestinations, 25)))
+                        if requestModel.status == 0 and numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
+                            # print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
+                            numApiCalls = 2
+                            destination = "|".join(destination)
+                            url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
+                            response = urllib.request.urlopen(url)
+                            responseJSON = json.loads(response.read())
+
+                            # print(responseJSON)
+                            for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
+                                if (item.get("status", "none") != 'NOT_FOUND'):
+                                    distanceStr = item.get("distance", "none").get("value", "none")
+                                    allDistances.append(distanceStr)
+                                    #print(item.get("distance", "none").get("text", "none"))
+                            destination = []
+
+                        if requestModel.status == 0:
+
+                            addressList = requestModel.address.split()
+                            addressFormatted = ""
+                            for word in addressList:
+                                addressFormatted += word
+                                addressFormatted += "+"
+
+                            cityList = requestModel.city.split()
+                            cityFormatted = ""
+                            for word in cityList:
+                                addressFormatted += word
+                                addressFormatted += "+"
+
+                            destination.append(addressFormatted + cityFormatted + requestModel.state + "+" + requestModel.zipCode)
+                        numDestinations = numDestinations + 1
+
+                    destination = "|".join(destination)
+                    url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
+                    response = urllib.request.urlopen(url)
+                    responseJSON = json.loads(response.read())
+
+                    for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
+                        if (item.get("status", "none") != 'NOT_FOUND'):
+                            distanceStr = item.get("distance", "none").get("value", "none")
+                            # print("hi" + str(distanceStr))
+                            allDistances.append(distanceStr)
+                            #print(item.get("distance", "none").get("text", "none"))
+
+                    for requestModel in RequestModel.objects.all():
+                        if requestModel.status == 0:
+                            allUnclaimedRequests.append(requestModel)
+
+                    #Insertion Sorting
+                    #Sort the distances, then rearrange allUnclaimedRequests
+                    # for i in range(1, len(allDistances)):
+                    #     j = i
+                    #     while j>=1 and allDistances[j] < allDistances[j-1]:
+                    #         allDistances[j], allDistances[j-1] = allDistances[j-1], allDistances[j]
+                    #         allUnclaimedRequests[j], allUnclaimedRequests[j-1] = allUnclaimedRequests[j-1], allUnclaimedRequests[j]
+                    #         j -= 1
+
+                    #Dict Python Sorting
+                    keydict = dict(zip(allUnclaimedRequests, allDistances))
+                    allUnclaimedRequests.sort(key=keydict.get)
+                    # print(allUnclaimedRequests)
+            elif 'confirmClaims' in request.POST.keys():
                 # print("request.post: ", vars(request))
                 base_url = '/confirmation/?requestObjIds='
                 for keyIndex, postKey in enumerate(request.POST.keys()):
@@ -497,7 +582,7 @@ def nearbyRequests(request):
                 url = base_url
                 print(url)
                 return HttpResponseRedirect(url)
-            if 'requestObjId' in request.POST.keys():
+            elif 'requestObjId' in request.POST.keys():
                 # print("Request ID: " + request.POST['requestModelId'])
 
                 # print("Request Object: " + str(vars(requestObj)))
@@ -507,106 +592,28 @@ def nearbyRequests(request):
                 query_string =  urlencode({'requestObjIds=': request.POST['requestObjId']})  # 2 category=42
                 url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
                 return HttpResponseRedirect(url)  # 4
+    else:
+        #Below uses date to sort the list of requests from most urgent to least
+        allDateNumbers = []
+        for requestModel in RequestModel.objects.all():
+            if requestModel.status == 0:
+                allUnclaimedRequests.append(requestModel)
+                print(10000*requestModel.delivDate.year + 100*requestModel.delivDate.month + requestModel.delivDate.day)
+                allDateNumbers.append(10000*requestModel.delivDate.year + 100*requestModel.delivDate.month + requestModel.delivDate.day)
 
+        keydict = dict(zip(allUnclaimedRequests, allDateNumbers))
+        allUnclaimedRequests.sort(key=keydict.get)
+        print(allUnclaimedRequests)
 
-        else:
-            print("not authorized")
-            return HttpResponseRedirect("/notLoggedIn/")
-
-    #Below uses Google's Distance Matrix API to sort the list of requests from nearest to furthest
-    donor = Donor.objects.get(user = request.user)
-    print(vars(donor))
-
-    addressList = donor.address.split()
-    addressFormatted = ""
-    for word in addressList:
-        addressFormatted += word
-        addressFormatted += "+"
-
-    cityList = donor.city.split()
-    cityFormatted = ""
-    for word in cityList:
-        addressFormatted += word
-        addressFormatted += "+"
-
-    origin = addressFormatted + cityFormatted + donor.state + "+" + donor.zipCode
-    print(origin)
-
-    destination = []
-    allDistances = []
-    numDestinations = 1
-    numApiCalls = 1
-    for requestModel in RequestModel.objects.all():
-        # print("mod result" + str(geek.mod(numDestinations, 25)))
-        if requestModel.status == 0 and numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
-            # print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
-            numApiCalls = 2
-            destination = "|".join(destination)
-            url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
-            response = urllib.request.urlopen(url)
-            responseJSON = json.loads(response.read())
-
-            # print(responseJSON)
-            for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
-                if (item.get("status", "none") != 'NOT_FOUND'):
-                    distanceStr = item.get("distance", "none").get("value", "none")
-                    allDistances.append(distanceStr)
-                    #print(item.get("distance", "none").get("text", "none"))
-            destination = []
-
-        if requestModel.status == 0:
-
-            addressList = requestModel.address.split()
-            addressFormatted = ""
-            for word in addressList:
-                addressFormatted += word
-                addressFormatted += "+"
-
-            cityList = requestModel.city.split()
-            cityFormatted = ""
-            for word in cityList:
-                addressFormatted += word
-                addressFormatted += "+"
-
-            destination.append(addressFormatted + cityFormatted + requestModel.state + "+" + requestModel.zipCode)
-        numDestinations = numDestinations + 1
-
-    destination = "|".join(destination)
-    url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
-    response = urllib.request.urlopen(url)
-    responseJSON = json.loads(response.read())
-
-    for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
-        if (item.get("status", "none") != 'NOT_FOUND'):
-            distanceStr = item.get("distance", "none").get("value", "none")
-            print("hi" + str(distanceStr))
-            allDistances.append(distanceStr)
-            #print(item.get("distance", "none").get("text", "none"))
-
-    allUnclaimedRequests = []
-    for requestModel in RequestModel.objects.all():
-        if requestModel.status == 0:
-            allUnclaimedRequests.append(requestModel)
-
-    #Insertion Sorting
-    #Sort the distances, then rearrange allUnclaimedRequests
-    # for i in range(1, len(allDistances)):
-    #     j = i
-    #     while j>=1 and allDistances[j] < allDistances[j-1]:
-    #         allDistances[j], allDistances[j-1] = allDistances[j-1], allDistances[j]
-    #         allUnclaimedRequests[j], allUnclaimedRequests[j-1] = allUnclaimedRequests[j-1], allUnclaimedRequests[j]
-    #         j -= 1
-
-
-    keydict = dict(zip(allUnclaimedRequests, allDistances))
-    allUnclaimedRequests.sort(key=keydict.get)
-    print(allUnclaimedRequests)
-
-    # allUnclaimedRequests.sort(key=lambda x: x.count, reverse=False)
-
+    if sortBy == "delivDate":
+        sortedNotBy = "distance"
+    else:
+        sortedNotBy = "delivDate"
 
     template = loader.get_template('main/nearbyRequests.html')
     context = {     #all inputs for the html go in these brackets
+        'sortBy': sortBy,
+        'sortedNotBy': sortedNotBy,
         'allRequests': allUnclaimedRequests,
         'authenticated': request.user.is_authenticated,
     }
