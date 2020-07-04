@@ -1,11 +1,12 @@
+import time
 import xlwt
 from xlwt import Workbook
-from ShippingInfo_6_20_20 import *   #change depending on shipping day
+from ShippingInfo_6_27_20 import *   #change depending on shipping day
 
 workbookBox = Workbook()
 workbookBag = Workbook()
-sheetBox = workbookBox.add_sheet('6.20.20')
-sheetBag = workbookBag.add_sheet('6.20.20')
+sheetBox = workbookBox.add_sheet('6.27.20')
+sheetBag = workbookBag.add_sheet('6.27.20')
 style = xlwt.easyxf('font: bold 1')
 
 # row, column
@@ -113,23 +114,72 @@ for i in range(len(data)-22):
                 #removing periods from address item
                 addressItemNoPeriod = ""
                 for char in addressList[i]:
-                    if char != ".":
+                    if char != "." and char!= ",":
                         addressItemNoPeriod += char
                 addressList[i] = addressItemNoPeriod
 
                 #deleting address items that are just blank spaces
-                if len(addressList[i]) == 0:
-                    addressList.pop(i)
+                # print(addressList[i])
+                # if addressList[i] == "":
+                #     addressList.pop(i)
+                #     found = True
+                #     break
+                try:
+                    addressList.remove('')
                     found = True
                     break
+                except:
+                    time.sleep(0.0001)
+                try:
+                    addressList.remove('\r')
+                    found = True
+                    break
+                except:
+                    time.sleep(0.0001)
+                try:
+                    addressList.remove('\n')
+                    found = True
+                    break
+                except:
+                    time.sleep(0.0001)
+                try:
+                    addressList.remove('us')
+                    found = True
+                    break
+                except:
+                    time.sleep(0.0001)
+
+
             if found == False or safetyCounter > 5:
                 break
             safetyCounter += 1
-        # print(addressList)
+
+        # for i in range(len(addressList)-1):
+        #     addressItemNoPeriod = ""
+        #     for char in addressList[i]:
+        #         if char != "." and char!= ",":
+        #             addressItemNoPeriod += char
+        #     addressList[i] = addressItemNoPeriod
+        #
+        #     try:
+        #         addressList.remove('')
+        #     except:
+        #         print()
+        #     try:
+        #         addressList.remove('\r')
+        #     except:
+        #         print()
+        #     try:
+        #         addressList.remove('\n')
+        #     except:
+        #         print()
+        addressList.append('us')
+        print(addressList)
+
         zip = addressList[len(addressList)-2]
         state = addressList[len(addressList)-3]
         notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "terrace", "trrc", "trail", "trl", "crossing", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor"]
-        if len(addressList[len(addressList)-5]) <= 2 and addressList[len(addressList)-5].lower() != "of":   #if it is likely an apt/suite number
+        if len(addressList[len(addressList)-5]) <= 2 and addressList[len(addressList)-5].lower() != "of" or "#" in addressList[len(addressList)-5]:   #if it is likely an apt/suite number
             city = addressList[len(addressList)-4]
             separator = " "
             address = separator.join(addressList[0:len(addressList)-4])

@@ -25,6 +25,7 @@ import random
 from .models import Donor
 from .models import RequestModel
 from .gmail import *
+from .sendGrid import *
 from .GoogleAPIKey import *
 import string
 import numpy as geek
@@ -69,14 +70,19 @@ def home(request):
         if requestModel.status == 2:
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=15):
 
-                try:    #ensure fake emails don't crash website
-                    service = getService()
-                    subject = "PPE Delivery Successful?"
-                    message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
-                    message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
-                    sendMessage(service, 'me', message)
-                except:
-                    print("PPE Delivery Successful Email Failed To Send")
+                subject = "PPE Delivery Successful?"
+                message_text = "Hi,<br /><br />We just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.<br /><br />If you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure<br /><br />If you have any questions, please let use know!"
+                sendMessage(message_text, subject, requestModel.email)
+
+                # try:    #ensure fake emails don't crash website
+                #     service = getService()
+                #     subject = "PPE Delivery Successful?"
+                #     message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping you or your coworkers stay safe! Since Print For The Cure personally handles many requests, and reimburses all of our donors, we hope you can help the project continue by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let use know!"
+                #     message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
+                #     sendMessage(service, 'me', message)
+                # except:
+                #     print("PPE Delivery Successful Email Failed To Send")
+
                 requestModel.status = 3
                 requestModel.save()
 
@@ -219,15 +225,19 @@ def donorRegistration(request):
                 user = authenticate(username=request.POST['username'], password=request.POST['password'])
                 login(request, user)
 
-                try:    #ensure fake emails don't crash website
-                    service = getService()
-                    #Donor Email
-                    subject = "PrintForTheCure Registration Details"
-                    message_text = "Thank you for registing with PrintForTheCure! Now you can get started claiming and fulfilling PPE requests on printforthecure.com!\n\nYour Username: %s" % (request.POST['username'])
-                    message = makeMessage("printforthecure@gmail.com", request.POST['email'], subject, message_text)
-                    sendMessage(service, 'me', message)
-                except:
-                    print("email verification failed")
+                subject = "PrintForTheCure Registration Details"
+                message_text = "Thank you for registing with PrintForTheCure! Now you can get started claiming and fulfilling PPE requests on printforthecure.com!<br /><br />Your Username: %s" % (request.POST['username'])
+                sendMessage(message_text, subject, request.POST['email'])
+
+                # try:    #ensure fake emails don't crash website
+                #     service = getService()
+                #     #Donor Email
+                #     subject = "PrintForTheCure Registration Details"
+                #     message_text = "Thank you for registing with PrintForTheCure! Now you can get started claiming and fulfilling PPE requests on printforthecure.com!\n\nYour Username: %s" % (request.POST['username'])
+                #     message = makeMessage("printforthecure@gmail.com", request.POST['email'], subject, message_text)
+                #     sendMessage(service, 'me', message)
+                # except:
+                #     print("email verification failed")
 
                 return HttpResponseRedirect("/registrationSuccessful/")
         else:
@@ -322,8 +332,7 @@ def doctorRequest(request):
                 newRequest.save()
 
             requestObj = RequestModel.objects.get(id=newRequest.id)
-            service = getService()
-            #Donor Email
+
             subject = "Request For PPE Submitted!"
             ppeType = ""
             if "shield" in requestObj.typePPE:
@@ -334,9 +343,24 @@ def doctorRequest(request):
                 ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestObj.typeHandle
             elif "opener" in requestObj.typePPE:
                 ppeType = "Personal Touchless Door Opener"
-            message_text = "Thank You For Submitting a Request For PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %s\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes From the Requester: %s\n\nYou will be emailed again either when a donor chooses to claim and fulfill your request, or if your request expires before any donors get the chance. We hope you you stay protected during these times!" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, requestObj.delivDate, requestObj.notes)
-            message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text)
-            sendMessage(service, 'me', message)
+            message_text = "Thank You For Submitting a Request For PPE!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Address: %s %s %s %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %s<br />ideal \"Deliver By\" date of requested PPE: %s<br /><br />Other Notes From the Requester: %s<br /><br />You will be emailed again either when a donor chooses to claim and fulfill your request, or if your request expires before any donors get the chance. We hope you you stay protected during these times!" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, requestObj.delivDate, requestObj.notes)
+            sendMessage(message_text, subject, requestObj.email)
+
+            # service = getService()
+            # #Donor Email
+            # subject = "Request For PPE Submitted!"
+            # ppeType = ""
+            # if "shield" in requestObj.typePPE:
+            #     ppeType = "3D Printed Face Shields"
+            # elif "strap" in requestObj.typePPE:
+            #     ppeType = "Face Mask Comfort Strap"
+            # elif "handle" in requestObj.typePPE:
+            #     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestObj.typeHandle
+            # elif "opener" in requestObj.typePPE:
+            #     ppeType = "Personal Touchless Door Opener"
+            # message_text = "Thank You For Submitting a Request For PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %s\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes From the Requester: %s\n\nYou will be emailed again either when a donor chooses to claim and fulfill your request, or if your request expires before any donors get the chance. We hope you you stay protected during these times!" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, requestObj.delivDate, requestObj.notes)
+            # message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text)
+            # sendMessage(service, 'me', message)
 
             return HttpResponseRedirect("/requestSubmitSuccessful/")
 
@@ -365,8 +389,7 @@ def map(request):
             requestModel.status = 1
             requestModel.save()
 
-            service = getService()
-            subject = "Request For PPE Expired"
+            subject = "Request For PPE Submitted!"
             ppeType = ""
             if "shield" in requestModel.typePPE:
                 ppeType = "3D Printed Face Shields"
@@ -376,9 +399,23 @@ def map(request):
                 ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestModel.typeHandle
             elif "opener" in requestModel.typePPE:
                 ppeType = "Personal Touchless Door Opener"
-            message_text = "We are sorry to notify you that your request for PPE has expired without being claimed. Your request Details:\n\n\nRequester's Name: %s %s\nRequester's Email: %s\nPPE Delivery Address: %s %s %s %s %s\n\nType of PPE Requested: %d\nAmount of PPE Requested: %s\nIdeal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nAs the website is just launching, we are gathering more donors to help ensure our essential workers can get the PPE they need. Please request again on https://printforthecure.com and we will do our best to help you next time. Thank you for your understanding.\n\nPlease contact us at printforthecure@gmail.com with any questions." % (requestModel.fName, requestModel.lName, requestModel.email, requestModel.address, requestModel.city, requestModel.state, requestModel.zipCode, requestModel.country, ppeType, requestModel.numPPE, requestModel.delivDate, requestModel.notes)
-            message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
-            sendMessage(service, 'me', message)
+            message_text = "We are sorry to notify you that your request for PPE has expired without being claimed. Your request Details:<br /><br /><br />Requester's Name: %s %s<br />Requester's Email: %s<br />PPE Delivery Address: %s %s %s %s %s<br /><br />Type of PPE Requested: %d<br />Amount of PPE Requested: %s<br />Ideal \"Deliver By\" date of requested PPE: %s<br /><br />Other Notes For the Donor: %s<br /><br />As the website is just launching, we are gathering more donors to help ensure our essential workers can get the PPE they need. Please request again on https://printforthecure.com and we will do our best to help you next time. Thank you for your understanding.<br /><br />Please contact us at printforthecure@gmail.com with any questions." % (requestModel.fName, requestModel.lName, requestModel.email, requestModel.address, requestModel.city, requestModel.state, requestModel.zipCode, requestModel.country, ppeType, requestModel.numPPE, requestModel.delivDate, requestModel.notes)
+            sendMessage(message_text, subject, requestModel.email)
+
+            # service = getService()
+            # subject = "Request For PPE Expired"
+            # ppeType = ""
+            # if "shield" in requestModel.typePPE:
+            #     ppeType = "3D Printed Face Shields"
+            # elif "strap" in requestModel.typePPE:
+            #     ppeType = "Face Mask Comfort Strap"
+            # elif "handle" in requestModel.typePPE:
+            #     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestModel.typeHandle
+            # elif "opener" in requestModel.typePPE:
+            #     ppeType = "Personal Touchless Door Opener"
+            # message_text = "We are sorry to notify you that your request for PPE has expired without being claimed. Your request Details:\n\n\nRequester's Name: %s %s\nRequester's Email: %s\nPPE Delivery Address: %s %s %s %s %s\n\nType of PPE Requested: %d\nAmount of PPE Requested: %s\nIdeal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nAs the website is just launching, we are gathering more donors to help ensure our essential workers can get the PPE they need. Please request again on https://printforthecure.com and we will do our best to help you next time. Thank you for your understanding.\n\nPlease contact us at printforthecure@gmail.com with any questions." % (requestModel.fName, requestModel.lName, requestModel.email, requestModel.address, requestModel.city, requestModel.state, requestModel.zipCode, requestModel.country, ppeType, requestModel.numPPE, requestModel.delivDate, requestModel.notes)
+            # message = makeMessage("printforthecure@gmail.com", requestModel.email, subject, message_text)
+            # sendMessage(service, 'me', message)
 
         if requestModel.status == 0:
             address = requestModel.address + " " + requestModel.city + " " + requestModel.state + " " + requestModel.zipCode
@@ -619,7 +656,7 @@ def confirmClaim(request):
     if request.method == 'POST':
         if 'yes' in request.POST.keys():
             for requestObj in requestObjs:
-                service = getService()
+
                 #Donor Email
                 subject = "Claimed Request For PPE"
                 ppeType = ""
@@ -631,22 +668,43 @@ def confirmClaim(request):
                     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestObj.typeHandle
                 elif "opener" in requestObj.typePPE:
                     ppeType = "Personal Touchless Door Opener"
-                message_text = "Thank You For Claiming a request for PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date for the requested PPE: %s\n\nOther Notes From the Requester: %s\n\nDelivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. \n\nThank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )\nIf you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
-                message = makeMessage("printforthecure@gmail.com", request.user.email, subject, message_text)
-                try:
-                    sendMessage(service, 'me', message)
-                except:
-                    print("message failed to send")
+                message_text = "Thank You For Claiming a request for PPE!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Organization: %s<br />Requester's Address: %s %s %s %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %d<br />ideal \"Deliver By\" date for the requested PPE: %s<br /><br />Other Notes From the Requester: %s<br /><br />Delivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. <br /><br />Thank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )<br />If you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
+                sendMessage(message_text, subject, request.user.email)
+
+                # service = getService()
+                # #Donor Email
+                # subject = "Claimed Request For PPE"
+                # ppeType = ""
+                # if "shield" in requestObj.typePPE:
+                #     ppeType = "3D Printed Face Shields"
+                # elif "strap" in requestObj.typePPE:
+                #     ppeType = "Face Mask Comfort Strap"
+                # elif "handle" in requestObj.typePPE:
+                #     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestObj.typeHandle
+                # elif "opener" in requestObj.typePPE:
+                #     ppeType = "Personal Touchless Door Opener"
+                # message_text = "Thank You For Claiming a request for PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date for the requested PPE: %s\n\nOther Notes From the Requester: %s\n\nDelivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. \n\nThank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )\nIf you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
+                # message = makeMessage("printforthecure@gmail.com", request.user.email, subject, message_text)
+                # try:
+                #     sendMessage(service, 'me', message)
+                # except:
+                #     print("message failed to send")
 
                 #Doctor Email
                 donor = Donor.objects.get(user = request.user)
                 subject = "Request For PPE Claimed"
-                message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
-                message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text1)
-                try:
-                    sendMessage(service, 'me', message)
-                except:
-                    print("message failed to send")
+                message_text1 = "Your Request for PPE has been claimed by a donor!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Organization: %s<br />Requester's Address:<br />%s<br />%s, %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %d<br />ideal \"Deliver By\" date of requested PPE: %s<br /><br />Other Notes For the Donor: %s<br /><br />Your Donor's Name: %s<br />Donor's Email: %s<br /><br />We suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.<br /><br />It is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
+                sendMessage(message_text1, subject, requestObj.email)
+
+                #Doctor Email
+                # donor = Donor.objects.get(user = request.user)
+                # subject = "Request For PPE Claimed"
+                # message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
+                # message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text1)
+                # try:
+                #     sendMessage(service, 'me', message)
+                # except:
+                #     print("message failed to send")
 
                 requestObj.status = 2
                 requestObj.save()
@@ -690,7 +748,6 @@ def confirmClaim1(request):
     if request.method == 'POST':
         if 'yes' in request.POST.keys():
 
-            service = getService()
             #Donor Email
             subject = "Claimed Request For PPE"
             ppeType = ""
@@ -702,16 +759,37 @@ def confirmClaim1(request):
                 ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestObj.typeHandle
             elif "opener" in requestObj.typePPE:
                 ppeType = "Personal Touchless Door Opener"
-            message_text = "Thank You For Claiming a request for PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date for the requested PPE: %s\n\nOther Notes From the Requester: %s\n\nDelivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. \n\nThank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )\nIf you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
-            message = makeMessage("printforthecure@gmail.com", request.user.email, subject, message_text)
-            sendMessage(service, 'me', message)
+            message_text = "Thank You For Claiming a request for PPE!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Organization: %s<br />Requester's Address: %s %s %s %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %d<br />ideal \"Deliver By\" date for the requested PPE: %s<br /><br />Other Notes From the Requester: %s<br /><br />Delivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. <br /><br />Thank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )<br />If you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
+            sendMessage(message_text, subject, request.user.email)
+
+            # service = getService()
+            # #Donor Email
+            # subject = "Claimed Request For PPE"
+            # ppeType = ""
+            # if "shield" in requestObj.typePPE:
+            #     ppeType = "3D Printed Face Shields"
+            # elif "strap" in requestObj.typePPE:
+            #     ppeType = "Face Mask Comfort Strap"
+            # elif "handle" in requestObj.typePPE:
+            #     ppeType = "Touch-less Door Handle; %s (Link: https://www.materialise.com/en/hands-free-door-opener/technical-information)" % requestObj.typeHandle
+            # elif "opener" in requestObj.typePPE:
+            #     ppeType = "Personal Touchless Door Opener"
+            # message_text = "Thank You For Claiming a request for PPE!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date for the requested PPE: %s\n\nOther Notes From the Requester: %s\n\nDelivery Instructions: We suggest that you connect with your requester directly. Donors are expected to ship the PPE directly to the requester, however you may use an alternate method of delivery *if you come to an agreement with your requester*. \n\nThank you for contributing to the battle against Covid-19! We hope you continue donating on our platform! : )\nIf you are interested in receiving a donation as a reward, we suggest that you communicate to your requester directly. To get a reimbursement, contact Print For The Cure at printforthecure@gmail.com." % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes)
+            # message = makeMessage("printforthecure@gmail.com", request.user.email, subject, message_text)
+            # sendMessage(service, 'me', message)
 
             #Doctor Email
             donor = Donor.objects.get(user = request.user)
             subject = "Request For PPE Claimed"
-            message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
-            message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text1)
-            sendMessage(service, 'me', message)
+            message_text1 = "Your Request for PPE has been claimed by a donor!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Organization: %s<br />Requester's Address:<br />%s<br />%s, %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %d<br />ideal \"Deliver By\" date of requested PPE: %s<br /><br />Other Notes For the Donor: %s<br /><br />Your Donor's Name: %s<br />Donor's Email: %s<br /><br />We suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.<br /><br />It is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
+            sendMessage(message_text1, subject, requestObj.email)
+
+            # #Doctor Email
+            # donor = Donor.objects.get(user = request.user)
+            # subject = "Request For PPE Claimed"
+            # message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
+            # message = makeMessage("printforthecure@gmail.com", requestObj.email, subject, message_text1)
+            # sendMessage(service, 'me', message)
 
             base_url = '/thankyou1/'  # 1 /products/
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
@@ -726,13 +804,13 @@ def confirmClaim1(request):
                 print("Donor claimed shield")
                 donor.shields += requestObj.numPPE
             elif requestObj.typePPE == "strap":
-                print("Donor claimed shield")
+                print("Donor claimed strap")
                 donor.straps += requestObj.numPPE
             elif requestObj.typePPE == "opener":
-                print("Donor claimed shield")
+                print("Donor claimed opener")
                 donor.openers += requestObj.numPPE
             elif requestObj.typePPE == "handle":
-                print("Donor claimed shield")
+                print("Donor claimed handle")
                 donor.handles += requestObj.numPPE
             donor.save()
 
