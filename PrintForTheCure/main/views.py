@@ -33,11 +33,11 @@ import numpy as geek
 # Create your views here.
 def home(request):
     #temporary: to recover the 300 shields request that expired
-    for requestModel in RequestModel.objects.all():
-        if requestModel.numPPE == 300:
-            print(requestModel.email)
-            requestModel.status = 0
-            requestModel.save()
+    # for requestModel in RequestModel.objects.all():
+    #     if requestModel.numPPE == 300:
+    #         print(requestModel.email)
+    #         requestModel.status = 0
+    #         requestModel.save()
 
     # print("Shields Being Requested: " + str(getCurrentRequestedShields(request)))
     # active = 0
@@ -568,7 +568,7 @@ def nearbyRequests(request):
                     keydict = dict(zip(allUnclaimedRequests, allDistances))
                     allUnclaimedRequests.sort(key=keydict.get)
                     # print(allUnclaimedRequests)
-            elif 'confirmClaims' in request.POST.keys():
+            if 'confirmClaims' in request.POST.keys():
                 # print("request.post: ", vars(request))
                 base_url = '/confirmation/?requestObjIds='
                 for keyIndex, postKey in enumerate(request.POST.keys()):
@@ -582,7 +582,7 @@ def nearbyRequests(request):
                 url = base_url
                 print(url)
                 return HttpResponseRedirect(url)
-            elif 'requestObjId' in request.POST.keys():
+            if 'requestObjId' in request.POST.keys():
                 # print("Request ID: " + request.POST['requestModelId'])
 
                 # print("Request Object: " + str(vars(requestObj)))
