@@ -449,6 +449,7 @@ def map(request):
         'authenticated': request.user.is_authenticated,
         'allRequests': allUnclaimedRequests,
         'addresses': addresses,
+        'key': key,
     }
     return HttpResponse(template.render(context, request))
 

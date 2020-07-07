@@ -278,7 +278,14 @@
         });
       }
     </script>
-    <script id="url" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAetUTOB2h4dzuM1rlmWOdHY-ooSypC7I&callback=initMap"></script>
+    <!-- <script>
+      var key = "{{ key }}";
+      var script = document.createElement('script');
+      script.src = "https://maps.googleapis.com/maps/api/js?key=" + "{{ key }}" + "&callback=initMap";
+      document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+      document.getElementsByTagName('script')[0].id = "url"
+    </script> -->
+
     <!--api url script goes right above here ^ -->
 
     {% for requestObj in allRequests %}
