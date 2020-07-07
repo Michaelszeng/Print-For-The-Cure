@@ -42,3 +42,11 @@ class RequestModel(models.Model):
 
     def __str__(self):
         return self.email
+
+class Email(models.Model):
+    recipient = models.CharField(max_length=255)
+    subject = models.CharField(max_length=255)
+    sentDate = models.DateField('date sent')
+
+    def __str__(self):
+        return self.recipient + ": " + self.subject + "   " + "Sent: " + str(self.sentDate)

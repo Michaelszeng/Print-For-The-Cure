@@ -1,12 +1,12 @@
 import time
 import xlwt
 from xlwt import Workbook
-from ShippingInfo_6_27_20 import *   #change depending on shipping day
+from ShippingInfo_7_4_20 import *   #change depending on shipping day
 
 workbookBox = Workbook()
 workbookBag = Workbook()
-sheetBox = workbookBox.add_sheet('6.27.20')
-sheetBag = workbookBag.add_sheet('6.27.20')
+sheetBox = workbookBox.add_sheet('7.4.20')
+sheetBag = workbookBag.add_sheet('7.4.20')
 style = xlwt.easyxf('font: bold 1')
 
 # row, column
