@@ -490,6 +490,11 @@ def nearbyRequests(request):
     sortBy = "delivDate"
     if request.method == 'POST':
         if request.user.is_authenticated:
+            currentSortBy = request.POST['sortBy']
+            print("CurrentSortBy: " + str(currentSortBy))
+            print("REQUEST POST KEYS")
+            print(request.POST.keys())
+            print(request.POST['sortBy'])
             if 'sortBy' in request.POST.keys():
                 print(request.POST['sortBy'])
                 if request.POST['sortBy'] == 'delivDate':
@@ -610,16 +615,17 @@ def nearbyRequests(request):
                 url = base_url
                 print(url)
                 return HttpResponseRedirect(url)
-            if 'requestObjId' in request.POST.keys():
-                # print("Request ID: " + request.POST['requestModelId'])
-
-                # print("Request Object: " + str(vars(requestObj)))
-                #return HttpResponseRedirect('/confirmation/' + '?' + "requestId=" + )
-
-                base_url = '/confirmation/'  # 1 /products/
-                query_string =  urlencode({'requestObjIds=': request.POST['requestObjId']})  # 2 category=42
-                url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
-                return HttpResponseRedirect(url)  # 4
+            # else:
+            # if 'requestObjId' in request.POST.keys():
+            #     # print("Request ID: " + request.POST['requestModelId'])
+            #
+            #     # print("Request Object: " + str(vars(requestObj)))
+            #     #return HttpResponseRedirect('/confirmation/' + '?' + "requestId=" + )
+            #
+            #     base_url = '/confirmation/'  # 1 /products/
+            #     query_string =  urlencode({'requestObjIds=': request.POST['requestObjId']})  # 2 category=42
+            #     url = '{}?{}'.format(base_url, query_string)  # 3 /products/?category=42
+            #     return HttpResponseRedirect(url)  # 4
     else:
         #Below uses date to sort the list of requests from most urgent to least
         allDateNumbers = []
