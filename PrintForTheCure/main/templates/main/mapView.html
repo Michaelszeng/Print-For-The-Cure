@@ -285,20 +285,21 @@
       document.getElementsByTagName('script')[0].parentNode.appendChild(script);
       document.getElementsByTagName('script')[0].id = "url"
     </script> -->
-
+    
     <!--api url script goes right above here ^ -->
 
     {% for requestObj in allRequests %}
       <script>
-        var requestObjId = {{ requestObj.id }}
-        console.log("id var declare: " + requestObjId)
+        console.log("");
+        var requestObjId = {{ requestObj.id }};
+        console.log("id var declare: " + requestObjId);
       </script>
       <form method="POST">
         <!-- Every <form> element needs a csrf_token as a security precaution. -->
         {% csrf_token %}
         <input type="hidden" id="lat{{ requestObj.id }}" name = "requestLat" value="{{ requestObj.lat }}"></input>
         <input type="hidden" id="lng{{ requestObj.id }}" name = "requestLng" value="{{ requestObj.lng }}"></input>
-        <input type="hidden" id="{{ requestObj.id }}" name="requestAddress" value="{{ requestObj.address }}"></input>
+        <input type="hidden" id="{{ requestObj.id }}" name="requestAddress" value="{{ requestObj.address }} {{ requestObj.city }}, {{ requestObj.state }}"></input>
       </form>
 
       <div style="overflow: auto;" class="form-popup" id="divID{{ requestObj.id }}">
@@ -329,11 +330,11 @@
 
           <script>
             function openForm(requestObjId) {
-              console.log("opening form for " + requestObjId)
+              // console.log("opening form for " + requestObjId)
               document.getElementById("divID" + requestObjId).style.display = "block";
             }
             function closeForm() {
-              console.log("closing form for " + requestObjId)
+              // console.log("closing form for " + requestObjId)
               document.getElementById("divID" + requestObjId).style.display = "none";
             }
             function closeFormButton(requestObjId) {
@@ -341,7 +342,7 @@
             }
 
             var typeShort = '{{ requestObj.typePPE }}'
-            console.log("typeShort: " + typeShort)
+            // console.log("typeShort: " + typeShort)
             var typeLong = ""
             switch(typeShort) {
               case "shield": typeLong="3D Printed Face Shields (printforthecure.com/catalogue-shield)"; break;
@@ -362,32 +363,33 @@
         var addressInput = document.getElementById("{{ requestObj.id }}");
         var latInput = document.getElementById("lat{{ requestObj.id }}");
         var lngInput = document.getElementById("lng{{ requestObj.id }}");
-        console.log(addressInput.value)
-        console.log(latInput.value)
-        console.log(lngInput.value)
+        // console.log("address input: " + addressInput.value)
+        console.log("latInput.value: " + latInput.value)
+        console.log("lngInput.value: " + lngInput.value)
         var floatLatInput = parseFloat(latInput.value);
         var floatLngInput = parseFloat(lngInput.value);
 
         if ((floatLatInput == 0.0) && (floatLngInput == 0.0)) {
-          console.log("defualt coords: " + latInput.value + ", " + lngInput.value)
-          geocoder.geocode( { 'address': addressInput.value}, function(results, status) {
-            if (status == 'OK') {
-              console.log(results[0].geometry.location);
-              map.setCenter(results[0].geometry.location);
-              var marker = new google.maps.Marker({
-                  map: map,
-                  position: results[0].geometry.location,
-                  title: 'Click to See Request Details',
-              });
-              marker.addListener('click', function() {
-                map.setZoom(10);
-                openForm('{{ requestObj.id }}')
-                // document.getElementById("markerClick").value = marker.getPosition();
-              });
-            } else {
-                // alert('Geocode was not successful for the following reason: ' + status);
-            }
-          });
+          console.log("request has default coords: " + latInput.value + ", " + lngInput.value)
+          // geocoder.geocode( { 'address': addressInput.value}, function(results, status) {
+          //   if (status == 'OK') {
+          //     console.log(results[0].geometry.location);
+          //     map.setCenter(results[0].geometry.location);
+          //     var marker = new google.maps.Marker({
+          //         map: map,
+          //         position: results[0].geometry.location,
+          //         title: 'Click to See Request Details',
+          //     });
+          //     marker.addListener('click', function() {
+          //       map.setZoom(10);
+          //       openForm('{{ requestObj.id }}')
+          //       // document.getElementById("markerClick").value = marker.getPosition();
+          //     });
+          //   } else {
+          //     console.log("geocorder failed for the following reason: " + status)
+          //       // alert('Geocode was not successful for the following reason: ' + status);
+          //   }
+          // });
         }
         else {
           var pos = {lat: floatLatInput, lng: floatLngInput}

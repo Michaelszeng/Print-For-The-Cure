@@ -1,12 +1,12 @@
 import time
 import xlwt
 from xlwt import Workbook
-from ShippingInfo_8_8_20 import *   #change depending on shipping day
+from ShippingInfo_9_12_20 import *   #change depending on shipping day
 
 workbookBox = Workbook()
 workbookBag = Workbook()
-sheetBox = workbookBox.add_sheet('8.8.20')
-sheetBag = workbookBag.add_sheet('8.8.20')
+sheetBox = workbookBox.add_sheet('9.12.20')
+sheetBag = workbookBag.add_sheet('9.12.20')
 style = xlwt.easyxf('font: bold 1')
 
 # row, column
@@ -244,6 +244,8 @@ for i in range(len(data)-22):
         elif "Personal Touchless Door Opener" in type2:
             if num > 8:
                 packageType = "Box"
+            if num > 24:
+                packageType = "big"
             else:
                 packageType = "Bag"
         elif "Face Mask Comfort Strap" in type2:

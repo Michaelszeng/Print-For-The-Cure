@@ -32,7 +32,7 @@ from .GoogleAPIKey import *
 import string
 import numpy as geek
 
-# Create your views here.
+
 def home(request):
     #temporary: to recover the 300 shields request that expired
     # for requestModel in RequestModel.objects.all():
@@ -124,25 +124,6 @@ def home(request):
             return HttpResponseRedirect("/donorLeaderboards/")
         elif 'donate' in request.POST.keys():
             return redirect("https://www.gofundme.com/f/printforthecure")
-
-
-
-
-    #GEOCODES 0.0,0.0 REQUESTS, ONLY RUN THIS ONCE THIS COMMENT OUT THE BELOW CODE
-    # for requestModel in RequestModel.objects.all():
-    #     print(requestModel.lat)
-    #     if requestModel.lat-0.0 < 0.1 and requestModel.lng-0.0 < 0.1:   #don't use ==0 since double comparisions are bad
-    #         address = requestModel.address
-    #         url = ('https://maps.googleapis.com/maps/api/geocode/json' + '?address={}' + '&key={}').format(urllib.parse.quote(address, safe=""), key)
-    #         response = urllib.request.urlopen(url)
-    #         responseJSON = json.loads(response.read())
-    #         requestModel.lat = responseJSON.get("results")[0].get("geometry").get("location").get("lat")
-    #         requestModel.lng = responseJSON.get("results")[0].get("geometry").get("location").get("lng")
-    #         requestModel.save()
-    #END GEOCODING
-
-
-
 
     template = loader.get_template('main/home.html')
     context = {     #all inputs for the html go in these brackets
@@ -401,6 +382,19 @@ def requestSubmitSuccessful(request):
     return HttpResponse(template.render(context, request))
 
 def map(request):
+    #GEOCODES 0.0,0.0 REQUESTS; IF THIS CAUSES TOO MAY GEOCODE REQUESTS FOR OUR BUDGET, WE'LL REMOVE IT
+    for requestModel in RequestModel.objects.all():
+        print(requestModel.lat)
+        if requestModel.status == 0 and requestModel.lat-0.0 < 0.1 and requestModel.lng-0.0 < 0.1:   #don't use ==0 since double comparisions are bad
+            address = requestModel.address
+            url = ('https://maps.googleapis.com/maps/api/geocode/json' + '?address={}' + '&key={}').format(urllib.parse.quote(address, safe=""), key)
+            response = urllib.request.urlopen(url)
+            responseJSON = json.loads(response.read())
+            requestModel.lat = responseJSON.get("results")[0].get("geometry").get("location").get("lat")
+            requestModel.lng = responseJSON.get("results")[0].get("geometry").get("location").get("lng")
+            requestModel.save()
+    #END GEOCODING
+
     allUnclaimedRequests = []
     addresses = []
     counter = 0
@@ -718,6 +712,7 @@ def confirmClaim(request):
                 newEmail = Email(recipient=request.user.email, subject=subject, sentDate=timezone.now().date())
                 newEmail.save()
 
+
                 # service = getService()
                 # #Donor Email
                 # subject = "Claimed Request For PPE"
@@ -738,16 +733,22 @@ def confirmClaim(request):
                 #     print("message failed to send")
 
                 #Doctor Email
-                donor = Donor.objects.get(user = request.user)
+                try:
+                    donor = Donor.objects.get(user = request.user)
+                except:
+                    print("retrieving donor failed")
                 subject = "Request For PPE Claimed"
                 #sendgrid version
                 # message_text1 = "Your Request for PPE has been claimed by a donor!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Organization: %s<br />Requester's Address:<br />%s<br />%s, %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %d<br />ideal \"Deliver By\" date of requested PPE: %s<br /><br />Other Notes For the Donor: %s<br /><br />Your Donor's Name: %s<br />Donor's Email: %s<br /><br />We suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.<br /><br />It is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
 
                 #pythonMail version
-                message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
-                sendMessage(message_text1, subject, requestObj.email)
-                newEmail = Email(recipient=requestObj.email, subject=subject, sentDate=timezone.now().date())
-                newEmail.save()
+                try:
+                    message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address:\n%s\n%s, %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
+                    sendMessage(message_text1, subject, requestObj.email)
+                    newEmail = Email(recipient=requestObj.email, subject=subject, sentDate=timezone.now().date())
+                    newEmail.save()
+                except:
+                    print("Message Failed To Send")
 
                 #Doctor Email
                 # donor = Donor.objects.get(user = request.user)
@@ -762,22 +763,25 @@ def confirmClaim(request):
                 requestObj.status = 2
                 requestObj.save()
 
-                donor = Donor.objects.get(user = request.user)
-                donor.ppe += requestObj.numPPE
-                donor.requests += 1
-                if requestObj.typePPE == "shield":
-                    print("Donor claimed shield")
-                    donor.shields += requestObj.numPPE
-                elif requestObj.typePPE == "strap":
-                    print("Donor claimed shield")
-                    donor.straps += requestObj.numPPE
-                elif requestObj.typePPE == "opener":
-                    print("Donor claimed shield")
-                    donor.openers += requestObj.numPPE
-                elif requestObj.typePPE == "handle":
-                    print("Donor claimed shield")
-                    donor.handles += requestObj.numPPE
-                donor.save()
+                try:
+                    donor = Donor.objects.get(user = request.user)
+                    donor.ppe += requestObj.numPPE
+                    donor.requests += 1
+                    if requestObj.typePPE == "shield":
+                        print("Donor claimed shield")
+                        donor.shields += requestObj.numPPE
+                    elif requestObj.typePPE == "strap":
+                        print("Donor claimed shield")
+                        donor.straps += requestObj.numPPE
+                    elif requestObj.typePPE == "opener":
+                        print("Donor claimed shield")
+                        donor.openers += requestObj.numPPE
+                    elif requestObj.typePPE == "handle":
+                        print("Donor claimed shield")
+                        donor.handles += requestObj.numPPE
+                    donor.save()
+                except:
+                    print("retrieving donor failed")
 
             base_url = '/thankyou/'  # 1 /products/
             query_string =  urlencode({'requestDetails': message_text})  # 2 category=42
@@ -838,16 +842,22 @@ def confirmClaim1(request):
             # sendMessage(service, 'me', message)
 
             #Doctor Email
-            donor = Donor.objects.get(user = request.user)
+            try:
+                donor = Donor.objects.get(user = request.user)
+            except:
+                print("retrieving donor failed")
             subject = "Request For PPE Claimed"
             #sendgrid verison
             # message_text1 = "Your Request for PPE has been claimed by a donor!<br /><br />Request Details: <br />Requester's Name: %s %s<br />Requester's Email: %s<br />Requester's Phone Number: %s<br />Requester's Organization: %s<br />Requester's Address:<br />%s<br />%s, %s %s<br /><br />Type of PPE Requested: %s<br />Amount of PPE Requested: %d<br />ideal \"Deliver By\" date of requested PPE: %s<br /><br />Other Notes For the Donor: %s<br /><br />Your Donor's Name: %s<br />Donor's Email: %s<br /><br />We suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.<br /><br />It is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
 
             #pythonMail version
-            message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
-            sendMessage(message_text1, subject, requestObj.email)
-            newEmail = Email(recipient=requestObj.email, subject=subject, sentDate=timezone.now().date())
-            newEmail.save()
+            try:
+                message_text1 = "Your Request for PPE has been claimed by a donor!\n\nRequest Details: \nRequester's Name: %s %s\nRequester's Email: %s\nRequester's Phone Number: %s\nRequester's Organization: %s\nRequester's Address: %s %s %s %s %s\n\nType of PPE Requested: %s\nAmount of PPE Requested: %d\nideal \"Deliver By\" date of requested PPE: %s\n\nOther Notes For the Donor: %s\n\nYour Donor's Name: %s\nDonor's Email: %s\n\nWe suggest contacting your donor directly regarding method of delivery for your request PPE. Donors typically ship directly to your given address, however alternate methods can be used if an agreement is reached with the donor.\n\nIt is truly from the generosity of donors that many doctors and essential workers can receive help during these times. We engourage you to send a very nice message, or even a small monetary donation to keep your donor's spirits high, and to help them continue to do good. We hope our platform serves you well! : )" % (requestObj.fName, requestObj.lName, requestObj.email, requestObj.phone, requestObj.organization, requestObj.address, requestObj.city, requestObj.state, requestObj.zipCode, requestObj.country, ppeType, requestObj.numPPE, str(requestObj.delivDate), requestObj.notes, request.user.get_full_name(), request.user.email)
+                sendMessage(message_text1, subject, requestObj.email)
+                newEmail = Email(recipient=requestObj.email, subject=subject, sentDate=timezone.now().date())
+                newEmail.save()
+            except:
+                print("Message Failed To Send")
 
             # #Doctor Email
             # donor = Donor.objects.get(user = request.user)
@@ -862,22 +872,25 @@ def confirmClaim1(request):
             requestObj.status = 2
             requestObj.save()
 
-            donor = Donor.objects.get(user = request.user)
-            donor.ppe += requestObj.numPPE
-            donor.requests += 1
-            if requestObj.typePPE == "shield":
-                print("Donor claimed shield")
-                donor.shields += requestObj.numPPE
-            elif requestObj.typePPE == "strap":
-                print("Donor claimed strap")
-                donor.straps += requestObj.numPPE
-            elif requestObj.typePPE == "opener":
-                print("Donor claimed opener")
-                donor.openers += requestObj.numPPE
-            elif requestObj.typePPE == "handle":
-                print("Donor claimed handle")
-                donor.handles += requestObj.numPPE
-            donor.save()
+            try:
+                donor = Donor.objects.get(user = request.user)
+                donor.ppe += requestObj.numPPE
+                donor.requests += 1
+                if requestObj.typePPE == "shield":
+                    print("Donor claimed shield")
+                    donor.shields += requestObj.numPPE
+                elif requestObj.typePPE == "strap":
+                    print("Donor claimed strap")
+                    donor.straps += requestObj.numPPE
+                elif requestObj.typePPE == "opener":
+                    print("Donor claimed opener")
+                    donor.openers += requestObj.numPPE
+                elif requestObj.typePPE == "handle":
+                    print("Donor claimed handle")
+                    donor.handles += requestObj.numPPE
+                donor.save()
+            except:
+                print("retrieving donor failed")
 
             return HttpResponseRedirect(url)  # 4
 
