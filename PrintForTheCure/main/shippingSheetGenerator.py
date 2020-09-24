@@ -178,7 +178,7 @@ for i in range(len(data)-22):
 
         zip = addressList[len(addressList)-2]
         state = addressList[len(addressList)-3]
-        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "terrace", "trrc", "trail", "trl", "crossing", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor", "apt", "ap"]
+        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "terrace", "trrc", "trail", "trl", "crossing", "ridge", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor", "apt", "ap"]
         if len(addressList[len(addressList)-5]) <= 2 and addressList[len(addressList)-5].lower() != "of" or "#" in addressList[len(addressList)-5]:   #if it is likely an apt/suite number
             city = addressList[len(addressList)-4]
             separator = " "
