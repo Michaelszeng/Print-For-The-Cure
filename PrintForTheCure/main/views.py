@@ -63,6 +63,11 @@ def home(request):
     claimRate = getClaimRate(request)
 
     claimedPPE = 0
+    claimedRequests = 0
+
+    requestersServed = []
+    statesServed = []
+    organizationsServed = []
     for requestModel in RequestModel.objects.all():
         if requestModel.status == 2 or requestModel.status == 3:
             claimedPPE += requestModel.numPPE   #increment the number of claimed PPE
@@ -70,6 +75,16 @@ def home(request):
 
 
         if requestModel.status == 2:
+            claimedRequests = claimedRequests + 1
+            requesterName = (requestModel.fName + requestModel.lName).lower()
+            if requesterName not in requestersServed:
+                requestersServed.append(requesterName)
+            if requestModel.state not in statesServed:
+                statesServed.append(state)
+            requesterOrganization = (requestModel.organization).lower().strip()
+            if requesterOrganization in organizationsServed:
+                requestersServed.append(requesterOrganization)
+
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=18):
                 # print("PPE Delivery Successful?")
 
@@ -95,6 +110,9 @@ def home(request):
                 requestModel.save()
 
     claimedPPE = claimedPPE - geek.mod(claimedPPE, 10)
+    numRequestersServed = len(requestersServed)
+    numStatesServed = len(statesServed)
+    numOrganizationsServed = len(organizationsServed)
 
     print("claimedPPE: " + str(claimedPPE))
 
@@ -130,6 +148,10 @@ def home(request):
         'authenticated': request.user.is_authenticated,
         'claimRate': claimRate,
         'claimedPPE': claimedPPE,
+        'claimedRequests': claimedRequests,
+        'requestersServed': numRequestersServed,
+        'statesServed': statesServed,
+        'organizationsServed': organizationsServed
     }
     return HttpResponse(template.render(context, request))
 
@@ -1034,19 +1056,19 @@ def getClaimRate(request):
     # claimRate = claimedRequestedPPE/totalRequestedPPE
 
     #determine rate from # requests
-    totalRequests = 0.0
-    claimedRequests = 0.0
+    totalRequests = 0
+    claimedRequests = 0
     for requestModel in RequestModel.objects.all():
         if requestModel.status == 1:
             totalRequests += 1
-        if requestModel.status == 2:
+        elif requestModel.status == 2:
             claimedRequests += 1
             totalRequests += 1
-        if requestModel.status == 3:
+        elif requestModel.status == 3:
             claimedRequests += 1
             totalRequests += 1
 
-    claimRate = claimedRequests/totalRequests
+    claimRate = (claimedRequests + 0.0)/(totalRequests + 0.0)
 
     print("claimed requests: " + str(claimedRequests))
     print("total requests claimed and expired: " + str(totalRequests))
