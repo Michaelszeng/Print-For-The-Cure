@@ -161,15 +161,56 @@
       }
     }
 
-    /**/
     .footer-pict {
       background-image: url(https://images.pexels.com/photos/3881247/pexels-photo-3881247.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260);
     }
 
-
     .row {
       display: flex; /* equal height of the children */
     }
+
+    .col-md-0-5 { width: 4.166666%; }
+    .col-md-2-75 {width: 22.91666%; }
+
+    .col-md-1-5 { width: 12.5%; }
+    .col-md-1-8 { width: 15%; }
+    .col-md-2-5 { width: 20.83333%; }
+    .col-md-3-5 { width: 29.16667%; }
+    .col-md-4-5 { width: 37.5%; }
+    .col-md-5-5 { width: 45.83333%; }
+    .col-md-6-5 { width: 54.16667%; }
+    .col-md-7-5 { width: 62.5%; }
+    .col-md-8-5 { width: 70.83333%; }
+    .col-md-9-5 { width: 79.16667%; }
+    .col-md-10-2 { width: 85%; }
+    .col-md-10-5 { width: 87.5%; }
+    .col-md-11-5 { width: 95.8333%; }
+
+    hr {
+      border-top: 1px solid black;
+    }
+
+    .imgCentered {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .imgCenteredShield {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .containerImgOverlay {
+      position: relative;
+      text-align: center;
+      color: white;
+      width: 50%;
+    }
+
     </style>
   </head>
 
@@ -274,24 +315,24 @@
           <div style="z-index: 1;" class="my-desc">
             <div style="z-index: 1; background-color: white;" class="bg-secondary clearfix">
               <div class="inner-text">
-                <p><b style="font-size: 150%">Print For The Cure </b>is a web platform aiming to mobilize all makers to combat the critical shortage of PPE (Personal Protective Equipment). Some PPE, such as face shields, mask comfort straps, and hand-less door openers can be easily produced at home. We connect makers/donors capable of producing PPE to essential workers/requesters in need.</p>
-                <p><b style="font-size: 150%">How It Works in 5 Easy Steps: </b>
+                <p class="color-dark"><b style="font-size: 175%; color:rgb(0, 201, 219);">Print For The Cure </b>is a web platform aiming to mobilize all makers to combat the critical shortage of PPE (Personal Protective Equipment). Some PPE, such as face shields, mask comfort straps, and hand-less door openers can be easily produced at home. We connect makers/donors capable of producing PPE to essential workers/requesters in need.</p>
+                <p class="color-dark"><b style="font-size: 125%">How It Works in 5 Easy Steps: </b>
                 <ol>
-                  <li>Essential Workers can <a href="#request" class="link-inpage">submit requests</a> for PPE.</li>
-                  <li>Donors must <a href="/register/" class="link-inpage">register</a> through the website.</li>
-                  <li>Anyone can browse PPE requests on a <a href="#map" class="link-inpage">map</a>, and registered donors can view <a href="/nearbyRequests/" class="link-inpage">requests nearest to them</a>.</li>
-                  <li>Registered donors can claim requests, after which they are connected with their requester.</li>
-                  <li>Donors fulfill their claimed requests for PPE and arrange delivery with their requester.</li>
+                  <li class="color-dark">Essential Workers can <a href="#request" class="link-inpage">submit requests</a> for PPE.</li>
+                  <li class="color-dark">Donors must <a href="/register/" class="link-inpage">register</a> through the website.</li>
+                  <li class="color-dark">Anyone can browse PPE requests on a <a href="#map" class="link-inpage">map</a>, and registered donors can view <a href="/nearbyRequests/" class="link-inpage">requests nearest to them</a>.</li>
+                  <li class="color-dark">Registered donors can claim requests, after which they are connected with their requester.</li>
+                  <li class="color-dark">Donors fulfill their claimed requests for PPE and arrange delivery with their requester.</li>
                 </ol>
                 <br />
-                <p style="margin-bottom:-5px;">By using this platform, </p>
+                <p class="color-dark" style="margin-bottom:-5px;">By using this platform, </p>
                 <ul>
-                  <li >Essential workers can benefit by receiving critical Protective Equipment.</li>
-                  <li >Donors can help save the lives of their doctors & essential workers.</li>
-                  <li >Requesters are welcome to give monetary donations to their donors upon fulfillment of their request.</li>
+                  <li class="color-dark">Essential workers can benefit by receiving critical Protective Equipment.</li>
+                  <li class="color-dark">Donors can help save the lives of their doctors & essential workers.</li>
+                  <li class="color-dark">Requesters are welcome to give monetary donations to their donors upon fulfillment of their request.</li>
                 </ul>
                 <br />
-                <b style="font-size: 150%;">Be a part of the movement to mobilize makers against Covid-19!</b>
+                <b class="color-dark" style="font-size: 150%;">Be a part of the movement to mobilize makers against Covid-19!</b>
               </div>
             </div>
             <div class="bg-dark clearfix">
@@ -324,7 +365,7 @@
         <div class="container-medium "></div>
 
         <div class="block-title">
-          <div class="row">
+          <div class="row" style="margin-bottom:-3%; margin-top:-2%;">
             <div class="col-md-6">
               <h1 style="margin:5%; margin-bottom:3%; font-size:825%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ claimRate }}%</h1>
               <p style="font-size:200%; margin-top:-6%; margin-bottom:-8%;"class="text-uppercase color-dark text-bold no-margin">Probability</p>
@@ -334,13 +375,74 @@
               </div>
             </div>
 
-            <div class="col-md-6">
-              <h1 style="margin:5%; margin-bottom:-3.5%; font-size:825%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ claimedPPE }}+</h1>
-
-              <!-- <p style="font-size:200%; margin-top:-6%; margin-bottom:-4%;"class="text-uppercase color-dark text-bold no-margin">prob</p> -->
-              <div>
-                <h2 style="margin:10%;" class="text-uppercase color-dark text-bold no-margin">Pieces of PPE Made and Donated By Gracious Makers</h2>
+            <div class="col-md-6" style="text-align: center">
+              <div class="container containerImgOverlay" style="padding-top: 2%;">
+                <img src="{% static 'assets/theme/images/shieldIcon.png' %}" alt="" style="width:50%; margin-top: 5%; display: block; margin-left: auto; margin-right: auto;">
+                <div class="imgCenteredShield">
+                  <h1 style="margin:5%; margin-bottom:-3.5%; padding-top: 5%; font-size:825%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ claimedPPE }}+</h1>
+                </div>
               </div>
+              <!-- <h1 style="margin:5%; margin-bottom:-3.5%; font-size:825%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ claimedPPE }}+</h1> -->
+
+              <div>
+                <h2 style="margin:10%; margin-top: 5.375%;" class="text-uppercase color-dark text-bold no-margin">PPE<span class="text-lowercase">s</span> Made & Donated By Gracious Makers</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-0-5">
+            </div>
+            <div class="col-md-11">
+              <hr color="black">
+            </div>
+            <div class="col-md-0-5">
+            </div>
+          </div>
+
+          <div class = "row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-2-5">
+              <div class="container containerImgOverlay" style="padding-top: 2%;">
+                <img src="{% static 'assets/theme/images/requesterIcon.png' %}" alt="" style="width:60%; margin-top: 5%; display: block; margin-left: auto; margin-right: auto;">
+                <div class="imgCentered">
+                  <h1 style="margin:5%; margin-bottom:-3.5%; font-size:500%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ requestersServed }}</h1>
+                </div>
+              </div>
+              <div>
+                <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">Requesters Served</h3>
+              </div>
+            </div>
+            <div class="col-md-2-5">
+              <h1 style="margin:5%; margin-bottom:-1%; margin-top: 2%; font-size:500%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ claimedRequests }}</h1>
+              <div>
+                <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">Requests Claimed</h3>
+              </div>
+            </div>
+            <div class="col-md-2-5">
+              <div class="container containerImgOverlay" style="padding-top: 2%;">
+                <img src="{% static 'assets/theme/images/orgIcon.png' %}" alt="" style="width:60%; margin-top: 5%; display: block; margin-left: auto; margin-right: auto;">
+                <div class="imgCentered">
+                  <h1 style="margin:5%; margin-bottom:-3.5%; font-size:500%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ organizationsServed }}</h1>
+                </div>
+              </div>
+              <div>
+                <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">Organizations Supported</h3>
+              </div>
+            </div>
+            <div class="col-md-2-5">
+              <div class="container containerImgOverlay" style="padding-top: 2%;">
+                <img src="{% static 'assets/theme/images/stateIcon.png' %}" alt="" style="width:60%; margin-top: 5%; display: block; margin-left: auto; margin-right: auto;">
+                <div class="imgCentered">
+                  <h1 style="margin:5%; margin-bottom:-3.5%; font-size:500%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ statesServed }}</h1>
+                </div>
+              </div>
+              <div>
+                <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">States Reached</h3>
+              </div>
+            </div>
+            <div class="col-md-1">
             </div>
           </div>
         </div>

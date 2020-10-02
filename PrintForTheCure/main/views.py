@@ -77,13 +77,13 @@ def home(request):
         if requestModel.status == 2:
             claimedRequests = claimedRequests + 1
             requesterName = (requestModel.fName + requestModel.lName).lower()
+            requesterOrganization = (requestModel.organization).lower().strip()
             if requesterName not in requestersServed:
                 requestersServed.append(requesterName)
             if requestModel.state not in statesServed:
-                statesServed.append(state)
-            requesterOrganization = (requestModel.organization).lower().strip()
-            if requesterOrganization in organizationsServed:
-                requestersServed.append(requesterOrganization)
+                statesServed.append(requestModel.state)
+            if requesterOrganization not in organizationsServed:
+                organizationsServed.append(requesterOrganization)
 
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=18):
                 # print("PPE Delivery Successful?")
@@ -150,8 +150,8 @@ def home(request):
         'claimedPPE': claimedPPE,
         'claimedRequests': claimedRequests,
         'requestersServed': numRequestersServed,
-        'statesServed': statesServed,
-        'organizationsServed': organizationsServed
+        'organizationsServed': numOrganizationsServed,
+        'statesServed': numStatesServed
     }
     return HttpResponse(template.render(context, request))
 
