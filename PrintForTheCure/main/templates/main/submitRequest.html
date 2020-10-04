@@ -548,7 +548,12 @@
 
                 }
                 if (type == "strap") {
-                  for (i = 2; i<101; i++) {
+                  var initialLen = select.length;
+                  for (i = 0; i < initialLen; i++) {
+                    select.remove(0);
+                    console.log("hi");
+                  }
+                  for (i = 2; i<251; i++) {
                     var opt = document.createElement('option');
                     opt.text = i.toString();
                     opt.value = i.toString();
@@ -564,7 +569,7 @@
                     select.remove(0);
                     console.log("hi");
                   }
-                  for (i = 2; i<13; i++) {
+                  for (i = 2; i<17; i++) {
                     var opt = document.createElement('option');
                     opt.text = i.toString();
                     opt.value = i.toString();
