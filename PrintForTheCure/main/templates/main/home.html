@@ -211,6 +211,58 @@
       width: 50%;
     }
 
+
+    /* START TESTIMONIALS STYLING */
+    #quote-carousel {
+      padding: 0 10px 30px 10px;
+      margin-top: 60px;
+    }
+    #quote-carousel .carousel-control {
+      background: none;
+      color: #CACACA;
+      font-size: 2.3em;
+      text-shadow: none;
+      margin-top: 30px;
+      width: 1%;
+    }
+    #quote-carousel .carousel-indicators {
+      position: relative;
+      right: 50%;
+      top: auto;
+      bottom: 0px;
+      margin-top: 10px;
+      margin-right: -19px;
+    }
+    #quote-carousel .carousel-indicators li {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      opacity: 0.4;
+      overflow: hidden;
+      transition: all .4s ease-in;
+      vertical-align: middle;
+    }
+    #quote-carousel .carousel-indicators .active {
+      width: 100px;
+      height: 100px;
+      opacity: 1;
+      transition: all .2s;
+    }
+    .item blockquote {
+      border-left: none;
+      margin: 0;
+    }
+    .item blockquote p:before {
+      content: "\f10d";
+      font-family: 'Fontawesome';
+      float: left;
+      margin-right: 10px;
+    }
+    /* END TESTIMONIALS STYLING */
+
     </style>
   </head>
 
@@ -299,9 +351,6 @@
       <section id="about" class="block-section">
         <div class="clearfix my-profile">
 
-
-
-
           <div style="z-index: 100" class="bg-secondary block-title">
             <div class="container">
               <h1 class="text-uppercase color-dark text-bold no-margin">The Movement</h1>
@@ -309,8 +358,6 @@
 
             </div>
           </div>
-
-
 
           <div style="z-index: 1;" class="my-desc">
             <div style="z-index: 1; background-color: white;" class="bg-secondary clearfix">
@@ -355,8 +402,6 @@
             </div>
           </div>
         </div>
-
-
       </section>
 
 
@@ -443,6 +488,71 @@
               </div>
             </div>
             <div class="col-md-1">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimonials" class="block-section">
+        <div class="container">
+          <div class="row" style="margin-top: 4%; margin-bottom: -4.5%;">
+            <div class="col-md-12" align="center">
+              <h2 class="text-uppercase color-dark text-bold no-margin align-middle" >Words from Recipients</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="carousel slide" data-ride="carousel" id="quote-carousel">
+                <!-- Carousel Slides / Quotes -->
+                <div class="carousel-inner text-center">
+                  <!-- Quote 1 -->
+                  <div class="item active">
+                    <blockquote>
+                      <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                          <p class="color-dark" style="font-size: 115%; margin-bottom: 3%;">Can't thank you enough for these. Thank you so much for thinking of us. It means so much knowing we have people like you going out of your way to keep us safe!</p>
+                          <!-- <small>Someone famous</small> -->
+                        </div>
+                      </div>
+                    </blockquote>
+                  </div>
+                  <!-- Quote 2 -->
+                  <div class="item">
+                    <blockquote>
+                      <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                          <p class="color-dark" style="font-size: 115%;">The PPE is used by dentists, dental assistants and hygienists who are treating emergency Covid patients who are experiencing emergent dental pain and require treatment as well as routine dental patients during the pandemic. We are not "near by" covid patients, we are literally in their mouths. This is amazing that someone would print those for us!!</p>
+                          <!-- <small>Someone famous</small> -->
+                        </div>
+                      </div>
+                    </blockquote>
+                  </div>
+                  <!-- Quote 3 -->
+                  <div class="item">
+                    <blockquote>
+                      <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                          <p class="color-dark" style="font-size: 115%;">I currently working for Ryan’s Rehab Services providing Physical, Occupational & Speech Therapy to skilled nursing facilities which is caring for suspected Covid-19 patients and we are expecting a surge in Covid patients as our neighboring facilities are having outbreaks. Thanks sooo much! It is greatly appreciated ♥️🙏🏻</p>
+                          <!-- <small>Someone famous</small> -->
+                        </div>
+                      </div>
+                    </blockquote>
+                  </div>
+                </div>
+                <!-- Bottom Carousel Indicators -->
+                <ol class="carousel-indicators">
+                  <li data-target="#quote-carousel" data-slide-to="0" class="active"><img class="img-responsive " src="{% static 'assets/theme/images/iconNurseColor1.png' %}" alt="">
+                  </li>
+                  <li data-target="#quote-carousel" data-slide-to="1"><img class="img-responsive" src="{% static 'assets/theme/images/iconNurseColor2.png' %}" alt="">
+                  </li>
+                  <li data-target="#quote-carousel" data-slide-to="2"><img class="img-responsive" src="{% static 'assets/theme/images/iconNurseColor3.png' %}" alt="">
+                  </li>
+                </ol>
+
+                <!-- Carousel Buttons Next/Prev -->
+                <a data-slide="prev" href="#quote-carousel" class="left carousel-control"><i class="fa fa-chevron-left"></i></a>
+                <a data-slide="next" href="#quote-carousel" class="right carousel-control"><i class="fa fa-chevron-right"></i></a>
+              </div>
             </div>
           </div>
         </div>
@@ -795,6 +905,8 @@
           <p class="color-dark" style="margin: -0.75%; margin-left: -5%; text-align: left;">Icon: Nurse by Berkah Icon from the Noun Project</p>
           <p class="color-dark" style="margin: -0.75%; margin-left: -5%; text-align: left;">Icon: Hospital by Vadim Solomakhin from the Noun Project</p>
           <p class="color-dark" style="margin: -0.75%; margin-left: -5%; text-align: left;">Icon: California by Linseed Studio from the Noun Project</p>
+          <p class="color-dark" style="margin: -0.75%; margin-left: -5%; text-align: left;">Icon: <a href="https://www.flaticon.com/authors/dinosoftlabs" title="DinosoftLabs">DinosoftLabs</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></p>
+          <p class="color-dark" style="margin: -0.75%; margin-left: -5%; text-align: left;">Icons: <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></p>
           <a href="#home" class="back-to-top"><i class="fa fa-angle-double-up" ></i></a>
         </div>
       </footer><!--END FOOTER-->
