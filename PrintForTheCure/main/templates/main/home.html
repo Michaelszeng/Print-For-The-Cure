@@ -264,27 +264,29 @@
     /* END TESTIMONIALS STYLING */
 
     /*START RECIPIENTS CAROUSEL STYLING*/
-    #header-carousel {
+    #gallery-carousel {
       height: 350px;
     }
     #img1 {
       height: 350px;
-      background-image: url("static/assets/theme/images/recipient1.png");
+      background-image: url("static/assets/theme/images/recipient1.jpg");
       background-position: center center;
       background-size: cover;
     }
     #img2 {
       height: 350px;
-      background-image: url("static/assets/theme/images/recipient2.png");
+      background-image: url("static/assets/theme/images/recipient2.jpg");
       background-position: center center;
       background-size: cover;
     }
     #img3 {
       height: 350px;
-      background-image: url("static/assets/theme/images/recipient3.png");
+      background-image: url("static/assets/theme/images/recipient3.jpg");
       background-position: center center;
       background-size: cover;
     }
+
+
     /*END RECIPIENTS CAROUSEL STYLING*/
 
     </style>
@@ -528,12 +530,12 @@
                 <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">Requesters Served</h3>
               </div>
             </div>
-            <div class="col-md-2-5">
+            <!-- <div class="col-md-2-5">
               <h1 style="margin:5%; margin-bottom:-1%; margin-top: 2%; font-size:500%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ claimedRequests }}</h1>
               <div>
                 <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">Requests Claimed</h3>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-2-5">
               <div class="container containerImgOverlay" style="padding-top: 2%;">
                 <img src="{% static 'assets/theme/images/orgIcon.png' %}" alt="" style="width:60%; margin-top: 5%; display: block; margin-left: auto; margin-right: auto;">
@@ -554,6 +556,17 @@
               </div>
               <div>
                 <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">States Reached</h3>
+              </div>
+            </div>
+            <div class="col-md-2-5">
+              <div class="container containerImgOverlay" style="padding-top: 2%;">
+                <img src="{% static 'assets/theme/images/3dPrinterIcon.png' %}" alt="" style="width:65%; margin-top: 3%; display: block; margin-left: auto; margin-right: auto;">
+                <div class="imgCentered">
+                  <h1 style="margin:5%; margin-bottom:-3.5%; font-size:500%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ numDonors }}</h1>
+                </div>
+              </div>
+              <div>
+                <h3 style="margin:3%;" class="text-uppercase color-dark text-bold no-margin">Registered PPE Donors</h3>
               </div>
             </div>
             <div class="col-md-1">
@@ -609,14 +622,27 @@
                       </div>
                     </blockquote>
                   </div>
+                  <!-- Quote 4 -->
+                  <div class="item">
+                    <blockquote>
+                      <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                          <p class="color-dark" style="font-size: 115%;">Thank you so much for the face shields and ear savers for my team.  Your supplies came at a time when it was very difficult to procure sufficient PPE at dental offices. I really appreciate your ingenuity and innovation.</p>
+                          <!-- <small>Someone famous</small> -->
+                        </div>
+                      </div>
+                    </blockquote>
+                  </div>
                 </div>
                 <!-- Bottom Carousel Indicators -->
                 <ol class="carousel-indicators">
-                  <li data-target="#quote-carousel" data-slide-to="0" class="active"><img class="img-responsive " src="{% static 'assets/theme/images/iconNurseColor1.png' %}" alt="">
+                  <li data-target="#quote-carousel" data-slide-to="0" class="active"><img class="img-responsive " src="{% static 'assets/theme/images/iconNurseColor4.png' %}" alt="">
                   </li>
                   <li data-target="#quote-carousel" data-slide-to="1"><img class="img-responsive" src="{% static 'assets/theme/images/iconNurseColor2.png' %}" alt="">
                   </li>
                   <li data-target="#quote-carousel" data-slide-to="2"><img class="img-responsive" src="{% static 'assets/theme/images/iconNurseColor3.png' %}" alt="">
+                  </li>
+                  <li data-target="#quote-carousel" data-slide-to="2"><img class="img-responsive" src="{% static 'assets/theme/images/iconNurseColor1.png' %}" alt="">
                   </li>
                 </ol>
 
@@ -631,7 +657,36 @@
 
 
 
-    
+      <section id="gallery" class="block-section" data-ride="carousel">
+        <!-- <div class="container">
+          <div id="gallery-carousel" class="carousel slide" data-ride="carousel">
+
+            <ul class="carousel-indicators">
+              <li data-target="#gallery-carousel" data-slide-to="0" class="active"></li>
+              <li data-target="#gallery-carousel" data-slide-to="1"></li>
+              <li data-target="#gallery-carousel" data-slide-to="2"></li>
+            </ul>
+
+            <div class="carousel-inner">
+              <div id="img1" class="carousel-item active">
+              </div>
+              <div id="img2" class="carousel-item">
+              </div>
+              <div id="img3" class="carousel-item">
+              </div>
+            </div>
+
+            <a class="left carousel-control" href="#gallery-carousel" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#gallery-carousel" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+        </div> -->
+      </section>
 
 
 

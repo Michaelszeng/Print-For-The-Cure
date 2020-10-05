@@ -113,6 +113,14 @@ def home(request):
     numRequestersServed = len(requestersServed)
     numStatesServed = len(statesServed)
     numOrganizationsServed = len(organizationsServed)
+    numDonors = 0
+    for user1 in User.objects.all():
+        #print(vars(user1))
+        try:
+            donor = Donor.objects.get(user = user1)
+            numDonors = numDonors + 1
+        except:
+            print("User %s doesn't have donor" % user1.username)
 
     print("claimedPPE: " + str(claimedPPE))
 
@@ -153,7 +161,8 @@ def home(request):
         'claimedRequests': claimedRequests,
         'requestersServed': numRequestersServed,
         'organizationsServed': numOrganizationsServed,
-        'statesServed': numStatesServed
+        'statesServed': numStatesServed,
+        'numDonors':numDonors
     }
     return HttpResponse(template.render(context, request))
 
@@ -962,10 +971,12 @@ def leaderboards(request):
     handlesSorted = []
     requestsSorted = []
     citiesSorted = []
+    numDonors = 0
     for user1 in User.objects.all():
         #print(vars(user1))
         try:
             donor = Donor.objects.get(user = user1)
+            numDonors = numDonors + 1
         except:
             print("User %s doesn't have donor" % user1.username)
         else:
@@ -1024,7 +1035,8 @@ def leaderboards(request):
         'handlesSorted': handlesSorted,
         'requestsSorted': requestsSorted,
         'citiesSorted': citiesSorted,
-        'usernamesAndCities': usernamesAndCities
+        'usernamesAndCities': usernamesAndCities,
+        'numDonors': numDonors
     }
     return HttpResponse(template.render(context, request))
 

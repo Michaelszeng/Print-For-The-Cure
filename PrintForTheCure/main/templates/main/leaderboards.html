@@ -253,6 +253,33 @@
         top: 0;  bottom: 0;  left: 0;  right: 0;
 	      padding: 0 24px; /* Optional padding for content area */
       }
+      .imgCentered {
+        position: absolute;
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .containerImgOverlay {
+        position: relative;
+        text-align: center;
+        color: white;
+        width: 50%;
+      }
+
+      .col-md-1-5 { width: 12.5%; }
+      .col-md-1-8 { width: 15%; }
+      .col-md-2-5 { width: 20.83333%; }
+      .col-md-3-5 { width: 29.16667%; }
+      .col-md-4-5 { width: 37.5%; }
+      .col-md-5-5 { width: 45.83333%; }
+      .col-md-6-5 { width: 54.16667%; }
+      .col-md-7-5 { width: 62.5%; }
+      .col-md-8-5 { width: 70.83333%; }
+      .col-md-9-5 { width: 79.16667%; }
+      .col-md-10-2 { width: 85%; }
+      .col-md-10-5 { width: 87.5%; }
+      .col-md-11-5 { width: 95.8333%; }
+
     </style>
   </head>
   <body data-spy="scroll" data-target=".menu-area" data-offset="200">
@@ -321,7 +348,33 @@
       </div>
     </header>
 
-    <section>
+    <section id="donorCount">
+      <div class="block-title" style="background:white;">
+        <div class="row">
+          <div class="col-md-2-5"></div>
+          <!-- <div class="col-md-2">
+            <div class="container containerImgOverlay" style="padding-top: 1%;">
+              <img src="{% static 'assets/theme/images/3dPrinterIcon.png' %}" alt="" style="width:120%; margin-top: -1%; display: block; margin-left: auto; margin-right: auto;">
+              <div class="imgCentered">
+                <h1 style=" font-size:700%; color: rgb(0, 201, 219);" class="text-uppercase color-dark text-bold no-margin">{{ numDonors }}</h1>
+              </div>
+            </div>
+          </div> -->
+          <div class="col-md-1-5">
+            <h1 style="margin:2%; font-size:700%; color: rgb(3, 112, 30);" class="text-uppercase color-dark text-bold no-margin">{{ numDonors }}</h1>
+          </div>
+          <div class="col-md-1-5">
+            <img src="{% static 'assets/theme/images/3dPrinterIcon.png' %}" alt="" style="width:70%; margin-top: -1%; display: block; margin-left: auto; margin-right: auto;">
+          </div>
+          <div class="col-md-5">
+            <h2 style="margin:2%; margin-top:5%;" class="text-uppercase color-dark text-bold no-margin">Registered PPE Donors</h2>
+          </div>
+          <div class="col-md-2-5"></div>
+        <div>
+      </div>
+    </section>
+
+    <section id="main">
       <div class="row">
         <div class="col-md-4 minHeight" style="background-color: rgb(255, 255, 255);">
           <div align=center>
