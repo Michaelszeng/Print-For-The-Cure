@@ -142,6 +142,8 @@ def home(request):
             return HttpResponseRedirect("/donorLeaderboards/")
         elif 'donate' in request.POST.keys():
             return redirect("https://www.gofundme.com/f/printforthecure")
+        elif 'wishlist' in request.POST.keys():
+            return redirect("https://www.amazon.com/hz/wishlist/ls/3CZR7482U6HP?ref_=wl_share")
 
     template = loader.get_template('main/home.html')
     context = {     #all inputs for the html go in these brackets

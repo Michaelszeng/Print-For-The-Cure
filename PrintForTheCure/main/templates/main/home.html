@@ -263,6 +263,30 @@
     }
     /* END TESTIMONIALS STYLING */
 
+    /*START RECIPIENTS CAROUSEL STYLING*/
+    #header-carousel {
+      height: 350px;
+    }
+    #img1 {
+      height: 350px;
+      background-image: url("static/assets/theme/images/recipient1.png");
+      background-position: center center;
+      background-size: cover;
+    }
+    #img2 {
+      height: 350px;
+      background-image: url("static/assets/theme/images/recipient2.png");
+      background-position: center center;
+      background-size: cover;
+    }
+    #img3 {
+      height: 350px;
+      background-image: url("static/assets/theme/images/recipient3.png");
+      background-position: center center;
+      background-size: cover;
+    }
+    /*END RECIPIENTS CAROUSEL STYLING*/
+
     </style>
   </head>
 
@@ -406,6 +430,51 @@
 
 
 
+      <section id="guide" class="block-section">
+        <div class=" shape-bottom">
+          <div class="bg-secondary block-title">
+            <div class="container">
+              <h1 class="text-uppercase color-dark text-bold no-margin">How Can I Help?</h1>
+              <div class="title-icon"> <i class="fa fa-location-arrow"></i> </div>
+              <div class="row">
+                <div class="col-md-4 text-center" style="padding-top: 20px;">
+                  <form style="padding-bottom:1em;" method="POST">
+                    <!-- Every <form> element needs a csrf_token as a security precaution. -->
+                    {% csrf_token %}
+                    <!-- I use the hidden input element to send along the information that
+                      we are logging out. -->
+                    <input type="hidden" name="guide"></input>
+                    <button class="btn btn-default btn-flat-solid btn-pill">User Guide For PPE Donors</button>
+                  </form>
+                </div>
+                <div class="col-md-4 text-center" style="padding-top: 20px;">
+                  <form style="padding-bottom:1em;" method="POST">
+                    <!-- Every <form> element needs a csrf_token as a security precaution. -->
+                    {% csrf_token %}
+                    <!-- I use the hidden input element to send along the information that
+                      we are logging out. -->
+                    <input type="hidden" name="donate"></input>
+                    <button class="btn btn-default btn-flat-solid btn-pill">Support through Funding</button>
+                  </form>
+                </div>
+                <div class="col-md-4 text-center" style="padding-top: 20px;">
+                  <form style="padding-bottom:1em;" method="POST">
+                    <!-- Every <form> element needs a csrf_token as a security precaution. -->
+                    {% csrf_token %}
+                    <!-- I use the hidden input element to send along the information that
+                      we are logging out. -->
+                    <input type="hidden" name="wishlist"></input>
+                    <button class="btn btn-default btn-flat-solid btn-pill">Donate PPE Materials</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
       <section id="stats" class="block-section">
         <div class="container-medium "></div>
 
@@ -493,6 +562,8 @@
         </div>
       </section>
 
+
+
       <section id="testimonials" class="block-section">
         <div class="container">
           <div class="row" style="margin-top: 4%; margin-bottom: -4.5%;">
@@ -559,40 +630,9 @@
       </section>
 
 
-      <section id="guide" class="block-section">
-        <div class=" shape-bottom">
-          <div class="bg-secondary block-title">
-            <div class="container">
-              <h2 class="text-uppercase color-dark text-bold no-margin">How Can I Help?</h2>
-              <div class="title-icon"> <i class="fa fa-location-arrow"></i> </div>
-              <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-4 text-center" style="padding-top: 20px;">
-                  <form style="padding-bottom:1em;" method="POST">
-                    <!-- Every <form> element needs a csrf_token as a security precaution. -->
-                    {% csrf_token %}
-                    <!-- I use the hidden input element to send along the information that
-                      we are logging out. -->
-                    <input type="hidden" name="guide"></input>
-                    <button class="btn btn-default btn-flat-solid btn-pill">User Guide For PPE Donors</button>
-                  </form>
-                </div>
-                <div class="col-md-4 text-center" style="padding-top: 20px;">
-                  <form style="padding-bottom:1em;" method="POST">
-                    <!-- Every <form> element needs a csrf_token as a security precaution. -->
-                    {% csrf_token %}
-                    <!-- I use the hidden input element to send along the information that
-                      we are logging out. -->
-                    <input type="hidden" name="donate"></input>
-                    <button class="btn btn-default btn-flat-solid btn-pill">Support through Funding</button>
-                  </form>
-                </div>
-                <div class="col-md-2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
+    
+
 
 
       <section id="map" class="block-section">
@@ -636,17 +676,16 @@
 
         <div class="container-medium "></div>
 
-        <div class="block-title">
-          <h2 class="text-uppercase color-dark text-bold no-margin">Catalog of 3D Printable PPE</h2>
-
-          <div class="title-icon"> <i class="fa fa-book"></i> </div>
-        </div>
-
       </section>
 
 
 
       <section id="catalog" class="block-section">
+        <div class="block-title">
+          <h2 class="text-uppercase color-dark text-bold no-margin">Catalog of 3D Printable PPE</h2>
+
+          <div class="title-icon"> <i class="fa fa-book"></i> </div>
+        </div>
         <div class="block-page" >
           <div class="container-medium clearfix">
 
@@ -711,7 +750,6 @@
           </div>
         </div>
 
-          <div class="white-space-50"></div>
       </section><!-- END SERVICES-->
 
 
