@@ -71,10 +71,6 @@ def home(request):
     for requestModel in RequestModel.objects.all():
         if requestModel.status == 2 or requestModel.status == 3:
             claimedPPE += requestModel.numPPE   #increment the number of claimed PPE
-            #If it's been more than 10 days since the delivery date, and the request has been claimed, send the automated email msg asking for a donation
-
-
-        if requestModel.status == 2:
             claimedRequests = claimedRequests + 1
             requesterName = (requestModel.fName + requestModel.lName).lower()
             requesterOrganization = (requestModel.organization).lower().strip()
@@ -85,6 +81,8 @@ def home(request):
             if requesterOrganization not in organizationsServed:
                 organizationsServed.append(requesterOrganization)
 
+        if requestModel.status == 2:
+            #If it's been more than 10 days since the delivery date, and the request has been claimed, send the automated email msg asking for a donation
             if timezone.now().date() > requestModel.delivDate + datetime.timedelta(days=18):
                 # print("PPE Delivery Successful?")
 
