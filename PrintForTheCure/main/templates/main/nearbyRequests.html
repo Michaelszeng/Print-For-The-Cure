@@ -260,18 +260,17 @@
       </div>
     </div><!-- End Main navbar -->
 
-
     <form method="POST">
       {% csrf_token %}
     <div class="wrapper bg">
       <div class="block-page" >
         <div class="row">
           <div class="col-md-1-8 col-xs-12 d-flex align-items-center justify-content-center">
-            <input type="hidden" name="confirmClaims"></input>
+            <input id="confirmClaimsInput1" type="hidden" name="confirmClaims"></input>
             <div>
               <div class=" container-xs center clearfix">
                 <div class="form-group">
-                  <input type="hidden" name="confirmClaims"></input>
+                  <input id="confirmClaimsInput2" type="hidden" name="confirmClaims"></input>
                   <button type="submit" class=" btn-xs btn-default  btn-flat-solid" style="width: 190%; font-size: 150%; padding: -25%; margin-left: -25%; margin-right: -75%;">Confirm Claims</button>
                 </div>
               </div>
@@ -294,8 +293,10 @@
                   <option id="falseSortBy" value="{{ sortedNotBy }}">{{ sortedNotBy }}</option>
                 </select>
                 <input type="hidden" name="sort"></input>
-                <button type="submit" id="sortButton" onclick="reload" class="btn-xs btn-default  btn-flat-solid">Apply Changes</button>
+                <button type="submit" id="sortButton" onclick="reload()" class="btn-xs btn-default  btn-flat-solid">Apply Changes</button>
                 <script>
+                  document.getElementById("confirmClaimsInput1").setAttribute('name', 'confirmClaims')
+                  document.getElementById("confirmClaimsInput2").setAttribute('name', 'confirmClaims')
                   if ("{{ sortBy }}".localeCompare("delivDate") == 0) {
                     console.log("delivDate")
                     document.getElementById("trueSortBy").innerHTML = "Most Immediate Ideal Delivery Date";
@@ -308,6 +309,10 @@
                   }
 
                   function reload() {
+                    console.log("reloading...")
+                    document.getElementById("confirmClaimsInput1").setAttribute('name', 'dontConfirmClaims')
+                    document.getElementById("confirmClaimsInput2").setAttribute('name', 'dontConfirmClaims')
+                    console.log(document.getElementById("confirmClaimsInput1").getAttribute('name'))
                     document.getElementById("sortButton").innerHTML = "Reloading...";
                   }
                 </script>

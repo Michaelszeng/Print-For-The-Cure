@@ -12,6 +12,8 @@ class Donor(models.Model):
     straps = models.IntegerField(default=0)
     openers = models.IntegerField(default=0)
     handles = models.IntegerField(default=0)
+    lat = models.FloatField(default = 0.0)
+    lng = models.FloatField(default = 0.0)
     address = models.CharField(max_length=255, default='')
     city = models.CharField(max_length=255, default='')
     state = models.CharField(max_length=2, default='')

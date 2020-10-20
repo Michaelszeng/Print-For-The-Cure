@@ -31,6 +31,7 @@ from .pythonMail import *
 from .GoogleAPIKey import *
 import string
 import numpy as geek
+from math import radians, cos, sin, asin, sqrt
 
 
 def home(request):
@@ -512,19 +513,25 @@ def nearbyRequests(request):
         return HttpResponseRedirect("/notLoggedIn/")
 
     allUnclaimedRequests = []
+
+    #Set the default sortBy method
+    previousSortBy = "delivDate"
     sortBy = "delivDate"
+
     if request.method == 'POST':
+        print("request.POST.keys(): " + str(request.POST.keys()))
+        print("sortBy: " + sortBy)
+        print("previouseSortBy: " + previousSortBy)
         if request.user.is_authenticated:
             currentSortBy = request.POST['sortBy']
             print("CurrentSortBy: " + str(currentSortBy))
-            print("REQUEST POST KEYS")
-            print(request.POST.keys())
-            print(request.POST['sortBy'])
+            # print("REQUEST POST KEYS")
+            # print(request.POST.keys())
+            # print(request.POST['sortBy'])
             if 'sortBy' in request.POST.keys():
-                print(request.POST['sortBy'])
                 if request.POST['sortBy'] == 'delivDate':
                     sortBy = "delivDate"
-                    print("---date")
+                    print("------date")
                     #Below uses date to sort the list of requests from most urgent to least
                     allDateNumbers = []
                     for requestModel in RequestModel.objects.all():
@@ -535,13 +542,12 @@ def nearbyRequests(request):
 
                     keydict = dict(zip(allUnclaimedRequests, allDateNumbers))
                     allUnclaimedRequests.sort(key=keydict.get)
-                    print(allUnclaimedRequests)
+                    # print(allUnclaimedRequests)
                 elif request.POST['sortBy'] == 'distance':
                     sortBy = "distance"
-                    print("---distance")
+                    print("------distance")
                     #Below uses Google's Distance Matrix API to sort the list of requests from nearest to furthest
                     donor = Donor.objects.get(user = request.user)
-                    print(vars(donor))
 
                     addressList = donor.address.split()
                     addressFormatted = ""
@@ -556,77 +562,102 @@ def nearbyRequests(request):
                         addressFormatted += "+"
 
                     origin = addressFormatted + cityFormatted + donor.state + "+" + donor.zipCode
-                    print(origin)
 
-                    destination = []
-                    allDistances = []
-                    numDestinations = 1
-                    numApiCalls = 1
-                    for requestModel in RequestModel.objects.all():
-                        # print("mod result" + str(geek.mod(numDestinations, 25)))
-                        if requestModel.status == 0 and numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
-                            # print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
-                            numApiCalls = 2
-                            destination = "|".join(destination)
-                            url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
-                            response = urllib.request.urlopen(url)
-                            responseJSON = json.loads(response.read())
+                    donorLat = donor.lat
+                    donorLng = donor.lng
+                    if donorLat - 0.0 < 0.2 and donorLng - 0.0 < 0.2:
+                        url = ('https://maps.googleapis.com/maps/api/geocode/json' + '?address={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), key)
+                        response = urllib.request.urlopen(url)
+                        responseJSON = json.loads(response.read())
+                        donor.lat = responseJSON.get("results")[0].get("geometry").get("location").get("lat")
+                        donor.lng = responseJSON.get("results")[0].get("geometry").get("location").get("lng")
+                        donor.save()
 
-                            # print(responseJSON)
-                            for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
-                                if (item.get("status", "none") != 'NOT_FOUND'):
-                                    distanceStr = item.get("distance", "none").get("value", "none")
-                                    allDistances.append(distanceStr)
-                                    #print(item.get("distance", "none").get("text", "none"))
-                            destination = []
-
-                        if requestModel.status == 0:
-
-                            addressList = requestModel.address.split()
-                            addressFormatted = ""
-                            for word in addressList:
-                                addressFormatted += word
-                                addressFormatted += "+"
-
-                            cityList = requestModel.city.split()
-                            cityFormatted = ""
-                            for word in cityList:
-                                addressFormatted += word
-                                addressFormatted += "+"
-
-                            destination.append(addressFormatted + cityFormatted + requestModel.state + "+" + requestModel.zipCode)
-                        numDestinations = numDestinations + 1
-
-                    destination = "|".join(destination)
-                    url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
-                    response = urllib.request.urlopen(url)
-                    responseJSON = json.loads(response.read())
-
-                    for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
-                        if (item.get("status", "none") != 'NOT_FOUND'):
-                            distanceStr = item.get("distance", "none").get("value", "none")
-                            # print("hi" + str(distanceStr))
-                            allDistances.append(distanceStr)
-                            #print(item.get("distance", "none").get("text", "none"))
-
+                    allUnclaimedRequests = []
+                    distancesList = []
                     for requestModel in RequestModel.objects.all():
                         if requestModel.status == 0:
                             allUnclaimedRequests.append(requestModel)
+                            distance = calcDistance(donorLat, requestModel.lat, donorLng, requestModel.lng)
+                            distancesList.append(distance)
 
-                    #Insertion Sorting
-                    #Sort the distances, then rearrange allUnclaimedRequests
-                    # for i in range(1, len(allDistances)):
-                    #     j = i
-                    #     while j>=1 and allDistances[j] < allDistances[j-1]:
-                    #         allDistances[j], allDistances[j-1] = allDistances[j-1], allDistances[j]
-                    #         allUnclaimedRequests[j], allUnclaimedRequests[j-1] = allUnclaimedRequests[j-1], allUnclaimedRequests[j]
-                    #         j -= 1
-
-                    #Dict Python Sorting
-                    keydict = dict(zip(allUnclaimedRequests, allDistances))
+                    keydict = dict(zip(allUnclaimedRequests, distancesList))
                     allUnclaimedRequests.sort(key=keydict.get)
-                    # print(allUnclaimedRequests)
+                    print("distancesList: " + str(distancesList))
+
+                    # destination = []
+                    # allDistances = []
+                    # numDestinations = 1
+                    # numApiCalls = 1
+                    # for requestModel in RequestModel.objects.all():
+                    #     # print("mod result" + str(geek.mod(numDestinations, 25)))
+                    #     if requestModel.status == 0 and numDestinations > 25 and geek.mod(numDestinations, 25) == 1:
+                    #         # print(str(numDestinations) + " " + str(geek.mod(numDestinations, 25)) + " reached 25 limit for destinations")
+                    #         numApiCalls = 2
+                    #         destination = "|".join(destination)
+                    #         url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
+                    #         response = urllib.request.urlopen(url)
+                    #         responseJSON = json.loads(response.read())
+                    #
+                    #         # print(responseJSON)
+                    #         for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
+                    #             if (item.get("status", "none") != 'NOT_FOUND'):
+                    #                 distanceStr = item.get("distance", "none").get("value", "none")
+                    #                 allDistances.append(distanceStr)
+                    #                 #print(item.get("distance", "none").get("text", "none"))
+                    #         destination = []
+                    #
+                    #     if requestModel.status == 0:
+                    #
+                    #         addressList = requestModel.address.split()
+                    #         addressFormatted = ""
+                    #         for word in addressList:
+                    #             addressFormatted += word
+                    #             addressFormatted += "+"
+                    #
+                    #         cityList = requestModel.city.split()
+                    #         cityFormatted = ""
+                    #         for word in cityList:
+                    #             addressFormatted += word
+                    #             addressFormatted += "+"
+                    #
+                    #         destination.append(addressFormatted + cityFormatted + requestModel.state + "+" + requestModel.zipCode)
+                    #     numDestinations = numDestinations + 1
+                    #
+                    # destination = "|".join(destination)
+                    # url = ('https://maps.googleapis.com/maps/api/distancematrix/json' + '?origins={}' + '&destinations={}' + '&key={}').format(urllib.parse.quote(origin, safe=""), urllib.parse.quote(destination, safe=""), key)
+                    # response = urllib.request.urlopen(url)
+                    # responseJSON = json.loads(response.read())
+                    #
+                    # for item in (responseJSON.get("rows", "none")[0].get("elements", "none")):
+                    #     if (item.get("status", "none") != 'NOT_FOUND'):
+                    #         distanceStr = item.get("distance", "none").get("value", "none")
+                    #         # print("hi" + str(distanceStr))
+                    #         allDistances.append(distanceStr)
+                    #         #print(item.get("distance", "none").get("text", "none"))
+                    #
+                    # for requestModel in RequestModel.objects.all():
+                    #     if requestModel.status == 0:
+                    #         allUnclaimedRequests.append(requestModel)
+                    #
+                    # #Insertion Sorting
+                    # #Sort the distances, then rearrange allUnclaimedRequests
+                    # # for i in range(1, len(allDistances)):
+                    # #     j = i
+                    # #     while j>=1 and allDistances[j] < allDistances[j-1]:
+                    # #         allDistances[j], allDistances[j-1] = allDistances[j-1], allDistances[j]
+                    # #         allUnclaimedRequests[j], allUnclaimedRequests[j-1] = allUnclaimedRequests[j-1], allUnclaimedRequests[j]
+                    # #         j -= 1
+                    #
+                    # #Dict Python Sorting
+                    # keydict = dict(zip(allUnclaimedRequests, allDistances))
+                    # allUnclaimedRequests.sort(key=keydict.get)
+                    # # print(allUnclaimedRequests)
+            previouseSortBy = sortBy
             if 'confirmClaims' in request.POST.keys():
+                print("sortBy: " + sortBy)
+                print("previouseSortBy: " + previousSortBy)
+                print("------------------------CONFIRMING CLAIM")
                 # print("request.post: ", vars(request))
                 base_url = '/confirmation/?requestObjIds='
                 for keyIndex, postKey in enumerate(request.POST.keys()):
@@ -1105,3 +1136,20 @@ def removeASCII(s):
             s = s[:i] + ' ' + s[i + 1:]
     # print(s)
     return s
+
+def calcDistance(lat1, lat2, lon1, lon2):
+    # The math module contains a function named
+    # radians which converts from degrees to radians.
+    lon1 = radians(lon1)
+    lon2 = radians(lon2)
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+    # Haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * asin(sqrt(a))
+    # Radius of earth in kilometers. Use 3956 for miles
+    r = 6371
+    # calculate the result
+    return(c * r)
