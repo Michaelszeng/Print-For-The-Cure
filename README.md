@@ -8,9 +8,9 @@ Web platform to connect good-hearted people and doctors to distribute necessary 
  - run pip install sendgrid
  
 When Pulling the Code:
-1) From the Project Face Shield mk2/Print For The Cure directory, run:
-   a) python manage.py collectstatic
-   b) python manage.py make migrations
-   c) python manage.py migrate
-   d) replace the local path in views.py, donorGuidePDF()
-   e) replace the src in mapview.html
+From the Project Face Shield mk2/Print For The Cure directory, run:
+ - python manage.py collectstatic
+ - python manage.py make migrations
+ - python manage.py migrate
+ - replace the local path in views.py, donorGuidePDF()
+ - replace the src in mapview.html
