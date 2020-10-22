@@ -25,6 +25,7 @@ import random
 from .models import Donor
 from .models import RequestModel
 from .models import Email
+from .models import DonorDate
 # from .gmail import *
 # from .sendGrid import *
 from .pythonMail import *
@@ -35,6 +36,28 @@ from math import radians, cos, sin, asin, sqrt
 
 
 def home(request):
+    donorDates = DonorDate.objects.all()
+    if len(donorDates) == 0:
+        print("Creating new donorDate Object")
+        newDonorDate = DonorDate(date=timezone.now().date() - datetime.timedelta(days = 22))
+        newDonorDate.save()
+    else:
+        print("DonorDate Obj Exists")
+        if timezone.now().date() > donorDates[0].date + datetime.timedelta(days = 21):
+            print("______________________________SENDING DONOR EMAIL LIST______________________________")
+            subject = "DONOR EMAIL LIST"
+            message_text = "Donor Email List: \n"
+            allUsers = User.objects.all()
+            for user1 in User.objects.all():
+                try:
+                    donor = Donor.objects.get(user = user1)
+                    message_text += user1.email
+                    message_text += "\n"
+                except:
+                    print("User %s doesn't have donor" % user1.username)
+            donorDates[0].date = timezone.now().date()
+            donorDates[0].save()
+            sendMessage(message_text, subject, "printforthecure@gmail.com")
     #temporary: to recover the 300 shields request that expired
     # for requestModel in RequestModel.objects.all():
     #     if requestModel.numPPE == 300:

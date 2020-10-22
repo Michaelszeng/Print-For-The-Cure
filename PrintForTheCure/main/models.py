@@ -52,3 +52,6 @@ class Email(models.Model):
 
     def __str__(self):
         return self.recipient + ": " + self.subject + "   " + "Sent: " + str(self.sentDate)
+
+class DonorDate(models.Model):
+    date = models.DateField('previous date that donors email list was sent to info@printforthecure.com')
