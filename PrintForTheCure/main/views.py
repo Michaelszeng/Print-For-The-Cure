@@ -36,6 +36,7 @@ from math import radians, cos, sin, asin, sqrt
 
 
 def home(request):
+    #SENDING DONOR EMAIL LIST TO PFTC@GMAIL.COM EVERY 21 DAYS
     donorDates = DonorDate.objects.all()
     if len(donorDates) == 0:
         print("Creating new donorDate Object")
@@ -58,6 +59,8 @@ def home(request):
             donorDates[0].date = timezone.now().date()
             donorDates[0].save()
             sendMessage(message_text, subject, "printforthecure@gmail.com")
+    #END
+
     #temporary: to recover the 300 shields request that expired
     # for requestModel in RequestModel.objects.all():
     #     if requestModel.numPPE == 300:
