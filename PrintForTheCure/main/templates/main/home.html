@@ -294,6 +294,18 @@
       background-position: center center;
       background-size: cover;
     }
+    #img5 {
+      height: 450px;
+      background-image: url("static/assets/theme/images/recipient5.jpg");
+      background-position: center center;
+      background-size: cover;
+    }
+    #img6 {
+      height: 450px;
+      background-image: url("static/assets/theme/images/recipient6.jpg");
+      background-position: center center;
+      background-size: cover;
+    }
     /*END RECIPIENTS CAROUSEL STYLING*/
 
     #headerLogo {
@@ -310,17 +322,35 @@
       background:url("static/assets/theme/images/logoOfficial.png") no-repeat 0 0;
     }
 
+    div#banner {
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgb(125, 255, 255);
+     }
+     div#banner-content {
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      padding: 10px;
+     }
     </style>
   </head>
 
 
-  <body  data-spy="scroll" data-target=".menu-area" data-offset="200">
+  <body data-spy="scroll" data-target=".menu-area" data-offset="200">
     <!--wrapper page-->
     <div class="wrapper">
-
       <!-- Main Header -->
       <header class="main-pict main-header" id="home">
         <div class="content-table header-content-fixed ">
+          <!-- <div class="row">
+            <div id="banner">
+              <div id="banner-content">
+                <span class="text-uppercase color-dark text-bold no-margin">Covid-19 Updates and Information <a href="https://www.cdc.gov/coronavirus/2019-ncov/index.html" style="margin-top:3em;">Here</a></span>
+              </div>
+            </div>
+        </div> -->
           <!-- <div class="row">
             <div id="headerLogo" class="logo">
               <img src="{% static 'assets/theme/images/PFTCLogoOfficial.png' %}" alt="" height="150">
@@ -415,7 +445,7 @@
           <div style="z-index: 1;" class="my-desc">
             <div style="z-index: 1; background-color: white;" class="clearfix">
               <div class="inner-text">
-                <p class="color-dark"><b style="font-size: 175%; color:rgb(0, 201, 219);">Print For The Cure </b>is a web platform aiming to mobilize all makers to combat the critical shortage of PPE (Personal Protective Equipment). Some PPE, such as face shields, mask comfort straps, and hand-less door openers can be easily produced at home. We connect makers/donors capable of producing PPE to essential workers/requesters in need.</p>
+                <p class="color-dark"><b style="font-size: 175%; color:rgb(0, 201, 219);">Print For The Cure </b>is a web platform aiming to mobilize all makers to combat the shortage of PPE (Personal Protective Equipment). Some PPE, such as face shields, mask comfort straps, and hand-less door openers can be easily produced at home. We connect makers/donors capable of producing PPE to essential workers/requesters in need.</p>
                 <p class="color-dark"><b style="font-size: 125%">How It Works in 5 Easy Steps: </b>
                 <ol>
                   <li class="color-dark">Essential Workers can <a href="#request" class="link-inpage">submit requests</a> for PPE.</li>
@@ -721,15 +751,21 @@
             <li data-target="#gallery-carousel" data-slide-to="1"></li>
             <li data-target="#gallery-carousel" data-slide-to="2"></li>
             <li data-target="#gallery-carousel" data-slide-to="3"></li>
+            <li data-target="#gallery-carousel" data-slide-to="4"></li>
+            <li data-target="#gallery-carousel" data-slide-to="5"></li>
           </ul>
           <div class="carousel-inner">
-            <div id="img1" class="carousel-item active">
+            <div id="img2" class="carousel-item active">
             </div>
-            <div id="img2" class="carousel-item">
+            <div id="img6" class="carousel-item">
+            </div>
+            <div id="img1" class="carousel-item">
             </div>
             <div id="img3" class="carousel-item">
             </div>
             <div id="img4" class="carousel-item">
+            </div>
+            <div id="img5" class="carousel-item">
             </div>
           </div>
           <a class="carousel-control-prev" href="#gallery-carousel" data-slide="prev">
@@ -905,14 +941,14 @@
               <h2 class="text-uppercase color-light">Subash Shibu</h2>
               <h5 class="text-uppercase color-light" style="margin-top:-12px;">Frontend Programmer</h5>
               <img src="{% static 'assets/theme/images/Subash.jpg' %}" alt="Michael Zeng" style="width:300px;height:300px;">
-              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I am Subash, a junior at Dublin High School. I wanted to help stop the spread of Covid-19, and created my own gofundme and helped make and distribute shields. Seeing as this website could be more efficient, I jumped in and helped program the front-end as well as market our platform.
+              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I am Subash, a senior at Dublin High School. I wanted to help stop the spread of Covid-19, and created my own gofundme and helped make and distribute shields. Seeing as this website could be more efficient, I jumped in and helped program the front-end as well as market our platform.
               </p>
             </div>
             <div class="col-md-4" style="margin: auto;" align="center">
               <h2 class="text-uppercase color-light">Ashwin Baluja</h2>
               <h5 class="text-uppercase color-light" style="margin-top:-12px;">Deployment Architect</h5>
               <img src="{% static 'assets/theme/images/ashwin.jpeg' %}" alt="Ashwin Baluja" style="width:300px;height:300px;">
-              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I'm Ashwin Baluja, a junior at The Bishop's School. I love Computer Science, and spend most of my time coding, especially with Machine Learning and Computer Vision. I designed and worked on the hosting and deployment of the website, as well as email confirmation.
+              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I'm Ashwin Baluja, a senior at The Bishop's School. I love Computer Science, and spend most of my time coding, especially with Machine Learning and Computer Vision. I designed and worked on the hosting and deployment of the website, as well as email confirmation.
               </p>
               <br /><br /><br /><br />
             </div>
@@ -922,7 +958,7 @@
               <h2 class="text-uppercase color-light">Nicholas Liu</h2>
               <h5 class="text-uppercase color-light" style="margin-top:-12px;">Social Media Marketing</h5>
               <img src="{% static 'assets/theme/images/Nicholas.jpg' %}" alt="Michael Zeng" style="width:300px;height:300px;">
-              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I'm Nicholas Liu, a rising junior attending The Bishop's School. I've spent my past several weeks assembling and delivering face shields to hospitals with my robotics FTC team "The Clueless" #11212. In my free time, I enjoy playing tennis, building robots, and taking nice strolls through the park.
+              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I'm Nicholas Liu, a rising senior attending The Bishop's School. I've spent my past several weeks assembling and delivering face shields to hospitals with my robotics FTC team "The Clueless" #11212. In my free time, I enjoy playing tennis, building robots, and taking nice strolls through the park.
               </p>
 
             </div>
@@ -930,7 +966,7 @@
               <h2 class="text-uppercase color-light">Andrew Kessler</h2>
               <h5 class="text-uppercase color-light" style="margin-top:-12px;">Strategic Account Manager</h5>
               <img src="{% static 'assets/theme/images/Drew.jpg' %}" alt="Andrew Kessler" style="width:300px;height:300px;">
-              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I'm Andrew Kessler, a junior at The Bishop's School in CA. I love science and enjoy building things. As for hobbies, I like to play lacrosse and solve puzzles. I hope that I will be able to do my part in fighting SARS-Cov-2 through PrintForTheCure.
+              <p class="color-light" style="font-size:120%; padding-right:4.5%; padding-left:4.5%; padding-top:3%;">I'm Andrew Kessler, a senior at The Bishop's School in CA. I love science and enjoy building things. As for hobbies, I like to play lacrosse and solve puzzles. I hope that I will be able to do my part in fighting SARS-Cov-2 through PrintForTheCure.
               </p>
               <br />
             </div>

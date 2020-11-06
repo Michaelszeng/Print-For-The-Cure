@@ -55,3 +55,6 @@ class Email(models.Model):
 
 class DonorDate(models.Model):
     date = models.DateField('previous date that donors email list was sent to info@printforthecure.com')
+
+class RequesterDate(models.Model):
+    date = models.DateField('previous date that requesters email list was sent to info@printforthecure.com')

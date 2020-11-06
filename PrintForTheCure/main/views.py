@@ -26,6 +26,7 @@ from .models import Donor
 from .models import RequestModel
 from .models import Email
 from .models import DonorDate
+from .models import RequesterDate
 # from .gmail import *
 # from .sendGrid import *
 from .pythonMail import *
@@ -33,32 +34,87 @@ from .GoogleAPIKey import *
 import string
 import numpy as geek
 from math import radians, cos, sin, asin, sqrt
+import time
 
 
 def home(request):
-    #SENDING DONOR EMAIL LIST TO PFTC@GMAIL.COM EVERY 21 DAYS
+    #SENDING DONOR/REQUESTER EMAIL LIST TO PFTC@GMAIL.COM (To activate, delete the DonorDate and RequesterDate objects through admin)
     donorDates = DonorDate.objects.all()
+    requesterDates = RequesterDate.objects.all()
     if len(donorDates) == 0:
         print("Creating new donorDate Object")
         newDonorDate = DonorDate(date=timezone.now().date() - datetime.timedelta(days = 22))
         newDonorDate.save()
-    else:
-        print("DonorDate Obj Exists")
-        if timezone.now().date() > donorDates[0].date + datetime.timedelta(days = 21):
-            print("______________________________SENDING DONOR EMAIL LIST______________________________")
-            subject = "DONOR EMAIL LIST"
-            message_text = "Donor Email List: \n"
-            allUsers = User.objects.all()
-            for user1 in User.objects.all():
-                try:
-                    donor = Donor.objects.get(user = user1)
-                    message_text += user1.email
-                    message_text += "\n"
-                except:
-                    print("User %s doesn't have donor" % user1.username)
-            donorDates[0].date = timezone.now().date()
-            donorDates[0].save()
-            sendMessage(message_text, subject, "printforthecure@gmail.com")
+        print("______________________________SENDING DONOR EMAIL LIST______________________________")
+        subject = "DONOR EMAIL LIST"
+        message_text = "Donor Email List: \n"
+        allUsers = User.objects.all()
+        for user1 in User.objects.all():
+            try:
+                donor = Donor.objects.get(user = user1)
+                message_text += user1.email
+                message_text += "\n"
+            except:
+                print("User %s doesn't have donor" % user1.username)
+        donorDates = DonorDate.objects.all()
+        donorDates[0].date = timezone.now().date()
+        donorDates[0].save()
+        sendMessage(message_text, subject, "printforthecure@gmail.com")
+    if len(requesterDates) == 0:
+        print("Creating new requesterDate Object")
+        newRequesterDate = RequesterDate(date=timezone.now().date() - datetime.timedelta(days = 22))
+        newRequesterDate.save()
+        print("______________________________SENDING REQUESTER EMAIL LIST______________________________")
+        subject = "REQUESTER EMAIL LIST"
+        message_text = "Requester Email List: \n"
+        allRequests = RequestModel.objects.all()
+        for request in allRequests:
+            message_text += request.email
+            message_text += "\n"
+        requesterDates = RequesterDate.objects.all()
+        requesterDates[0].date = timezone.now().date()
+        requesterDates[0].save()
+        sendMessage(message_text, subject, "printforthecure@gmail.com")
+
+    # if len(donorDates) == 0:
+    #     print("Creating new donorDate Object")
+    #     newDonorDate = DonorDate(date=timezone.now().date() - datetime.timedelta(days = 22))
+    #     newDonorDate.save()
+    # else:
+    #     print("DonorDate Obj Exists")
+    #     if timezone.now().date() > donorDates[0].date + datetime.timedelta(days = 21):
+    #         print("______________________________SENDING DONOR EMAIL LIST______________________________")
+    #         subject = "DONOR EMAIL LIST"
+    #         message_text = "Donor Email List: \n"
+    #         allUsers = User.objects.all()
+    #         for user1 in User.objects.all():
+    #             try:
+    #                 donor = Donor.objects.get(user = user1)
+    #                 message_text += user1.email
+    #                 message_text += "\n"
+    #             except:
+    #                 print("User %s doesn't have donor" % user1.username)
+    #         donorDates[0].date = timezone.now().date()
+    #         donorDates[0].save()
+    #         sendMessage(message_text, subject, "printforthecure@gmail.com")
+    # if len(requesterDates) == 0:
+    #     print("Creating new requesterDate Object")
+    #     newRequesterDate = RequesterDate(date=timezone.now().date() - datetime.timedelta(days = 22))
+    #     newRequesterDate.save()
+    # else:
+    #     print("RequesterDate Obj Exists")
+    #     if timezone.now().date() > requesterDates[0].date + datetime.timedelta(days = 21):
+    #         print("______________________________SENDING REQUESTER EMAIL LIST______________________________")
+    #         subject = "REQUESTER EMAIL LIST"
+    #         message_text = "Requester Email List: \n"
+    #         allRequests = RequestModel.objects.all()
+    #         for request in allRequests:
+    #             message_text += request.email
+    #             message_text += "\n"
+    #         requesterDates[0].date = timezone.now().date()
+    #         requesterDates[0].save()
+    #         sendMessage(message_text, subject, "printforthecure@gmail.com")
+    #     time.sleep(2)
     #END
 
     #temporary: to recover the 300 shields request that expired
@@ -149,7 +205,7 @@ def home(request):
 
     print("claimedPPE: " + str(claimedPPE))
 
-    print(request.user.is_authenticated)
+    # print(request.user.is_authenticated)
     if request.method == 'POST':
         if 'login' in request.POST.keys():
             return HttpResponseRedirect("/login/")
