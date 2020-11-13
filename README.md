@@ -10,7 +10,7 @@ Web platform to connect good-hearted people and doctors to distribute necessary 
 When Pulling the Code:
 From the Project Face Shield mk2/Print For The Cure directory, run:
  - python manage.py collectstatic
- - python manage.py make migrations
+ - python manage.py makemigrations
  - python manage.py migrate
  - replace the local path in views.py, donorGuidePDF()
  - replace the src in mapview.html
