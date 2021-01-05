@@ -175,7 +175,10 @@ def home(request):
 
                 #pythonMail version
                 message_text = "Hi,\n\nWe just wanted to check in to make sure your requested PPE has been delivered by your donor, or that a delivery had been arranged? If not, please make sure to contact your donor to ensure you will get the PPE you need.\n\nIf you have received your PPE, we hope it is helping! If you are comfortable, we would appreciate if you would send us a photo of the PPE in use, which we may display on the website. Print For The Cure handles many requests, and attempts to reimburse all of donors, we hope you can join the movement by supporting it at our gofundme: https://www.gofundme.com/f/printforthecure\n\nIf you have any questions, please let us know!"
-                sendMessage(message_text, subject, requestModel.email)
+                try:
+                    sendMessage(message_text, subject, requestModel.email)
+                except:
+                    print()
                 newEmail = Email(recipient=requestModel.email, subject=subject, sentDate=timezone.now().date())
                 newEmail.save()
                 # try:    #ensure fake emails don't crash website
