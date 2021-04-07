@@ -12,7 +12,8 @@ urlpatterns = [
     path('catalogue-dooropener/', views.catalogueDoorOpener, name='catalogue item door opener'),
 
     path('donorGuide/', views.donorGuidePDF, name='donor guide'),
-    path('register/', views.donorRegistration, name='donor registration'),
+    # path('register/', views.donorRegistration, name='donor registration'),
+    path('noLongerActive/', views.noLongerActive, name='no longer active'),
     path('registrationSuccessful/', views.registrationSuccessful, name='registration sucessful'),
     path('login/', views.donorLogin, name='login'),
     path('requestPPE/', views.doctorRequest, name='doctors submit requests'),

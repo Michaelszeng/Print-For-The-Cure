@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
+  <!--
+  Page to tell donor thank you for claiming a request. Yes I know this could be a popup but for simplicity's sake
+  Necessary Components:
+  1) button to return home
+  2) tell user/donor thank you for claiming a request
+  -->
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,50 +37,32 @@
 
     <link href="{% static 'assets/theme/css/style.css' %}" rel="stylesheet">
 
-  </head>
+    <style>
+      p {
+        font-size: 120%;
+      }
+    </style>
 
-  <body >
+  </head>
+  <body style= "background-color: rgb(228, 224, 224);">
+
+
     <div class="wrapper">
       <div class="block-page" >
-        <div class="container-xs clearfix">
-          <h2 class="text-uppercase color-dark"><i class="fa fa-sign-in"></i> DONOR LOGIN</h2>
-          <a href="/">Return to Home Page</a>
-          <hr/>
-          <form style="padding-bottom:1em;" method="POST">
-            <!-- Every <form> element needs a csrf_token as a security precaution. -->
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" class="form-control form-flat" name="username" id="username" />
-            </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control form-flat" name="password" id="password" />
-            </div>
-            <button type="submit" class="btn-xs btn-default  btn-flat-solid">Login</button>
+        <div style = " padding-left: 50px; padding-right: 50px; padding-top:20px; padding-bottom: 20px; background-color: white;" class="container-xs clearfix">
+          <h3 class="color-dark"><i class="fa fa-sign-in"></i> Sorry, this page is no longer active.</h3>
+          <p style="padding-top:20px;">The PPE shortage is about over now, so we're no longer hosting new PPE donors. We appreciate you clicking on this page though! :)</p>
 
-            {% if authenticated %}
-            {% else %}
-              <p>Username or Password invalid.</p>
-            {% endif %}
-          </form>
-          <div class="form-group">
-            <form style="padding-bottom:1em;" method="POST">
-              <!-- Every <form> element needs a csrf_token as a security precaution. -->
-              {% csrf_token %}
-              <!-- I use the hidden input element to send along the information that
-                we are logging out. -->
-              <input type="hidden" name="register"></input>
-              <!--<button type="submit">Not a Member?</button>-->
-              <!-- <a href="/register">Not a Member?</a> -->
-              <a href="/noLongerActive">Dont have an account? Register as a donor Here.</a>
-            </form>
-          </div>
-        </div>
-      </div>
+    <hr>
+
+
+
+    <a href="/" class="btn btn-lg btn-primary btn-flat-solid btn-pill margin-top-25">Return Home</a>
+
+    </div>
+    </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static 'assets/plugins/jquery.js' %}"></script>
     <script src="{% static 'assets/plugins/bootstrap-3.3.1/js/bootstrap.min.js' %}"></script>
 
@@ -103,41 +91,6 @@
     <!--=====================================================-->
     <!--configuration template-->
     <script src="{% static 'assets/theme/js/theme.js' %}"></script>
-
-
-
-    <!-- <div class="container">
-      <br /><br />
-      <h1>Login</h1>
-      <form style="padding-bottom:1em; padding-top:3em;" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" class="form-control" name="username" id="username" />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" name="password" id="password" />
-        </div>
-        <button type="submit" class="btn btn-danger">Login</button>
-        <br />
-      </form>
-
-      {% if authenticated %}
-      {% else %}
-        <p>Username and Password did not match.</p>
-      {% endif %}
-      <br />
-
-      <h2>Don't have an account yet?</h2>
-      <form style="padding-bottom:1em;" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="register" value="register"></input>
-        <button type="submit" class="btn btn-danger">Register</button>
-      </form>
-    </div> -->
-
-
 
   </body>
 </html>

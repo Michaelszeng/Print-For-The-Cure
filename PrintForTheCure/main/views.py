@@ -383,7 +383,8 @@ def donorLogin(request):
             else:
                 pass
         elif 'register' in request.POST.keys():
-            return HttpResponseRedirect("/register")
+            return HttpResponseRedirect("/noLongerActive")
+            # return HttpResponseRedirect("/register")
     # After we check the forms, set a flag for use in the template.
     if request.user.is_authenticated:
         template = loader.get_template('main/home.html')
@@ -394,6 +395,13 @@ def donorLogin(request):
     # Find the template
     context = {
         'authenticated': authenticated
+    }
+    return HttpResponse(template.render(context, request))
+
+def noLongerActive(request):
+    template = loader.get_template('main/noLongerActive.html')
+    context = {
+
     }
     return HttpResponse(template.render(context, request))
 

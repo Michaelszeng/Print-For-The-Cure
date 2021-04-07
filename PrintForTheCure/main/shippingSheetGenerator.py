@@ -1,15 +1,26 @@
 import time
 import xlwt
 from xlwt import Workbook
-from ShippingInfo_9_12_20 import *   #change depending on shipping day
+from ShippingInfo_2_8_21 import *   #change depending on shipping day
 
+workbookLightBox = Workbook()
 workbookBox = Workbook()
 workbookBag = Workbook()
-sheetBox = workbookBox.add_sheet('9.12.20')
-sheetBag = workbookBag.add_sheet('9.12.20')
+sheetLightBox = workbookLightBox.add_sheet('2.8.21')
+sheetBox =           workbookBox.add_sheet('2.8.21')
+sheetBag =           workbookBag.add_sheet('2.8.21')
 style = xlwt.easyxf('font: bold 1')
 
 # row, column
+sheetLightBox.write(0, 0, 'Full Name', style)
+sheetLightBox.write(0, 1, 'Address1', style)
+sheetLightBox.write(0, 2, 'City', style)
+sheetLightBox.write(0, 3, 'State', style)
+sheetLightBox.write(0, 4, 'Zipcode', style)
+sheetLightBox.write(0, 5, 'Type PPE', style)
+sheetLightBox.write(0, 6, 'Amount', style)
+sheetLightBox.write(0, 7, 'Email', style)
+
 sheetBox.write(0, 0, 'Full Name', style)
 sheetBox.write(0, 1, 'Address1', style)
 sheetBox.write(0, 2, 'City', style)
@@ -174,11 +185,11 @@ for i in range(len(data)-22):
         #     except:
         #         print()
         addressList.append('us')
-        print(addressList)
+        print("* * * * * * * * * * * * *" + str(addressList))
 
         zip = addressList[len(addressList)-2]
         state = addressList[len(addressList)-3]
-        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "dr", "drive", "ct", "court", "way", "pl", "place", "pkwy", "parkway", "cir", "circle", "ctr", "cntr", "center", "plaza", "highway", "terrace", "trrc", "trail", "trl", "crossing", "ridge", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor", "apt", "ap"]
+        notCityThings  = ["str", "st", "street", "ave", "avenue", "blvd", "boulevard", "rd", "road", "ln", "lane", "hwy", "dr", "drive", "ct", "court", "way", "pl", "place", "loop", "lp", "pkwy", "parkway", "cir", "circle", "cove", "ctr", "cntr", "center", "plaza", "highway", "terrace", "trrc", "trail", "trl", "crossing", "ridge", "path", "N", "S", "W", "E", "NW", "NE", "SW", "SE", "floor", "apt", "ap"]
         if len(addressList[len(addressList)-5]) <= 2 and addressList[len(addressList)-5].lower() != "of" or "#" in addressList[len(addressList)-5]:   #if it is likely an apt/suite number
             city = addressList[len(addressList)-4]
             separator = " "
@@ -237,8 +248,12 @@ for i in range(len(data)-22):
         num = int(num)
         # print("typePPE: " + type2)
         if "3D Printed Face Shields" in type2:
-            if num < 7:
+            if num <= 2:
+                packageType = "lightBox"
+            elif num < 7:
                 packageType = "Box"
+            elif num > 25:
+                packageType = "massive"
             else:
                 packageType = "big"
         elif "Personal Touchless Door Opener" in type2:
@@ -262,7 +277,16 @@ for i in range(len(data)-22):
                 packageType = "Bag"
         # print(packageType)
 
-        if packageType == "Box":
+        if packageType == "lightBox":
+            sheetLightBox.write(currentRow, 7, email2, style)
+            sheetLightBox.write(currentRow, 6, num, style)
+            sheetLightBox.write(currentRow, 5, type2, style)
+            sheetLightBox.write(currentRow, 4, zip, style)
+            sheetLightBox.write(currentRow, 3, state, style)
+            sheetLightBox.write(currentRow, 2, city.replace(',', ''), style)
+            sheetLightBox.write(currentRow, 1, address.replace(',', ''), style)
+            sheetLightBox.write(currentRow, 0, name2, style)
+        elif packageType == "Box" or packageType == "big":
             sheetBox.write(currentRow, 7, email2, style)
             sheetBox.write(currentRow, 6, num, style)
             sheetBox.write(currentRow, 5, type2, style)
@@ -281,12 +305,15 @@ for i in range(len(data)-22):
             sheetBag.write(currentRow, 1, address.replace(',', ''), style)
             sheetBag.write(currentRow, 0, name2, style)
         elif packageType == "env":
-            print("mail: " + email2)
-        elif packageType == "big":
-            print("big box: " + email2)
+            print("mail: " + str(email2) + "______________________________________" + str(num) + " " + str(type2))
+        elif packageType == "massive":
+            print("custom: " + str(email2) + "______________________________________" + str(num) + " " + str(type2))
+        # elif packageType == "big":
+        #     print("big box: " + str(email2) + "______________________________________" + str(num) + " " + str(type2))
         currentRow += 1
 
 
 
+workbookLightBox.save("ShippingBoxesLight.xls")
 workbookBox.save("ShippingBoxes.xls")
 workbookBag.save("ShippingEnvelopes.xls")
